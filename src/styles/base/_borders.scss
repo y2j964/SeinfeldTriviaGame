@@ -1,0 +1,57 @@
+.bb-neutral-light {
+  border-bottom: 1px solid $light-grey;
+}
+
+.bb-thicker-neutral-light {
+  border-bottom: 2px solid $light-grey;
+}
+
+.br-neutral-light{
+  border-right: 1px solid rgb(229, 229, 229);
+}
+
+
+.bx-neutral-light{
+  border-right: 1px solid $light-grey;
+  border-left: 1px solid $light-grey;
+}
+
+
+.br-lg-light-grey {
+	@include screen("lg"){
+			border-right: 1px solid $light-grey;
+		}
+}
+
+.bt-md-neutral-light {
+	@include screen("md") {
+		border-top: 1px solid $light-grey;
+	}
+}
+
+.by-neutral-light {
+	border-bottom: 1px solid $light-grey;
+	border-top: 1px solid $light-grey;
+}
+
+.bx-md-neutral-light {
+	@include screen("md"){
+		border-right: 1px solid rgb(229, 229, 229);
+		border-left: 1px solid rgb(229, 229, 229);
+	}
+}
+
+.bb-only {
+	border-top: none;
+  border-left: none;
+  border-right: none;
+  border-bottom: 1px solid transparent;
+}
+
+.b-black {
+	border-color: black;
+}
+
+.b-none {
+	border: none;
+}

@@ -1,0 +1,62 @@
+* {
+  box-sizing: border-box;  
+}
+
+html {
+	scroll-behavior: smooth;
+}
+
+ul,
+li {
+    list-style-type: none;
+    padding: 0px;
+    margin: 0px;
+}
+
+img {
+    max-width: 100%;
+    height: auto;
+}
+
+p,
+span {
+  font-family: Verdana, Geneva, sans-serif;
+}
+
+a {
+  color: black;
+}
+
+a:hover {
+  text-decoration: underline;
+  color: black;
+	cursor: pointer;
+}
+
+a:focus {
+  // outline: 1px dotted;
+  // outline-color: inherit;
+}
+
+// to prevent inner svg or use element from eating my click event in event delegation
+a > svg,
+a > img,
+button > svg,
+button > img {
+	pointer-events: none;
+}
+
+// input:focus{
+  // outline: none;
+// }
+
+[type="email"]:focus,
+[type="search"]:focus,
+[type="text"]:focus, 
+[type="password"]:focus {
+  outline: none;
+}
+
+time {
+	font-size: $font-sm;
+}

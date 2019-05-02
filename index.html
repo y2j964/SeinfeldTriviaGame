@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title>Seinfeld Trivia</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta name="author" content="Justin Mooney">
+  <meta name="description" content="" />
+  <meta name="keywords" content="" />
+  <meta name="robots" content="index,follow" />
+  <link rel="stylesheet" type="text/css" href="dist/styles.css" />
+</head>
+
+<body class="">
+  <header class="text-center px-10 py-8">
+    <h1 class="text-blue text-4xl">Seinfeld Quote Game</h1>
+  </header>
+  <main class="container mx-auto px-6">
+    <div class="card-intro card-intro--is-hidden">
+      <p class="text-xl mb-2 ">You think you know Seinfeld? Well, we shall see who the true Wiz is. The rules are
+        simple:
+        You will be given a quote, and you must identify which of the four major characters said it.</p>
+      <div class="ratio-16-9">
+        <img src="src/assets/images/seinfeld.jpg" alt="Jerry, George, Elaine, and Kramer">
+      </div>
+      <div class="my-3 text-center">
+        <p class="text-xl mb-4">Are you ready to play?</p>
+        <button class="ml-auto px-8 py-4 mb-2 b-2 border-yellow rounded-lg bg-blue text-white" id="startGame">It's Go
+          Time!</button>
+      </div>
+    </div>
+    <div class="card">
+      <div class="question flex justify-center items-center px-6 mb-8">
+        <!-- <hr class="full-width-link hidden md:block"> -->
+        <p class="question__text text-center text-sm md:text-base">"If you know what happened in the Mets game don't
+          tell me, I taped it. Hello?"
+        </p>
+      </div>
+      <div class="answers flex flex-col">
+        <div class="answers__group w-100 flex flex-col md:flex-row md:mb-3">
+          <hr class="full-width-link hidden md:block">
+          <button class="btn-special btn-special--is-correct" id="jerry">
+            <hr class="full-width-link md:hidden">
+            <span class="btn-special__letter">A: </span>
+            Jerry</button>
+          <button class="btn-special" id="george">
+            <hr class="full-width-link md:hidden"><span class="btn-special__letter">B:
+            </span>
+            George</button>
+        </div>
+        <div class="answers__group w-100 flex flex-col md:flex-row">
+          <hr class="full-width-link hidden md:block">
+          <button class="btn-special" id="elaine">
+            <hr class="full-width-link md:hidden"><span class="btn-special__letter">C: </span>
+            Elaine</button>
+          <button class="btn-special" id="kramer">
+            <hr class="full-width-link md:hidden"><span class="btn-special__letter">D:
+            </span>
+            Kramer</button>
+        </div>
+      </div>
+    </div>
+    <div>
+  </main>
+  <footer>
+    <p>Seinfeld is currently available to watch via Hulu and is syndicated on cable somewhere in the vicinity of
+      33
+      times a day.
+      Go watch it.</p>
+  </footer>
+</body>
+<script src="src/js/main.js"></script>
+
+</html>

@@ -1,0 +1,124 @@
+.favicon-sm {
+	width: 25px;
+	height: 25px;
+}
+
+.icon-sprite {
+	//important to combat injected stylesheet setting this to none
+  display: inline-block!important;
+  width: 18px;
+  height: 18px;
+  fill: white;
+}
+
+.icon-arrow-up2 {
+	width: 15px;
+	height: 15px;
+	fill: $grey;
+	// margin-top: -6px;
+}
+
+.icon-bars-wrapper {
+		@include screen("md"){
+		display: none;
+	}	
+}
+
+.icon-bars {
+	width: 25px;
+	height: 25px;
+	// stroke-width: 0;
+}
+
+.icon-caret-down {
+	width: 15px;
+	height: 15px;
+	fill: $light-grey;
+}
+
+.icon-close-wrapper {
+	position: absolute;
+	display: block;
+	top: 5px;
+	right: 0;
+	padding: 2em;
+	
+	@include screen("lg") {
+		top: 0;
+	}
+}
+
+.icon-close {
+	width: 28px;
+	height: 28px;
+	
+	&--grey {
+		fill: #7D7D7D;
+	}
+	
+	&--sm {
+		width: 18px;
+		height: 18px;
+	}
+	
+	&--is-hidden {
+		display: none;
+	}
+}
+
+.icon-facebook-2 {
+	fill: $facebook-blue;
+	margin-right: 10px;
+}
+
+.icon-google1 {  
+  width: 18px;
+  height: 18px;	
+	margin-right: 10px;
+}
+
+.icon-price-tag {
+	fill: white;
+	stroke: black;
+	//mt set to visually make it sit neater with the text
+	margin-top: 8px;
+}
+
+.icon-twitter-2 {
+	fill: $twitter-blue;
+	margin-right: 10px;
+}	
+	
+.icon-search {
+	width: 14px;
+	height: 14px;
+	fill: #a6a6a6;	
+}	
+
+.icon-user-wrapper {
+	display: block;
+}
+
+.icon-user {
+	width: 18px;
+	height: 18px;
+	fill: white;
+	stroke:white;
+	opacity: .7;
+	transition: opacity 300ms ease-in-out;
+	
+	&:hover {
+		opacity: 1;
+	}
+}
+
+.icon-user-2-wrapper {
+	background-color: $lighter-grey;
+}
+
+.icon-user-2 {
+	width: 18px;
+	height: 18px;
+	fill:  $grey;
+	// stroke:white;
+}

@@ -1,0 +1,184 @@
+// made into a pseudo element b/c of counter content
+.number-overlay:before {
+  transition: all 0.5s ease-in-out;
+  @extend %flex-centered;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  cursor: pointer;
+  content: counter(thumbnail-item);
+  font-size: 2em;
+  color: white;
+  z-index: 1;
+  opacity: 0;
+}
+
+.ratio-16-9 {
+  position: relative;
+  overflow: hidden;
+  display: block;
+  padding-top: 56.25%;
+  background-color: transparent;
+
+  img {
+    position: absolute;
+    border: 0;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: block;
+    margin: auto;
+  }
+}
+
+.ratio-4-3 {
+  position: relative;
+  overflow: hidden;
+  display: block;
+  padding-top: 75.8%;
+  background-color: black;
+  // set to black here b/c the card spacing looks odd if set to transparent
+
+  & img {
+    position: absolute;
+    border: 0;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: block;
+    margin: auto;
+  }
+}
+
+.img-overlay:hover:before {
+  background-color: rgba(0, 0, 0, 0.3);
+}
+
+.placeholder-hover::-webkit-input-placeholder {
+  color: black;
+  transition: color 0.5s ease-in-out;
+}
+
+.placeholder-hover::-moz-placeholder {
+  color: black;
+  transition: color 0.5s ease-in-out;
+}
+
+.placeholder-hover::-ms-input-placeholder {
+  color: black;
+  transition: color 0.5s ease-in-out;
+}
+
+.placeholder-hover:-moz-placeholder {
+  color: black;
+  transition: color 0.5s ease-in-out;
+}
+
+.placeholder-hover:hover::-webkit-input-placeholder {
+  color: #ff66d9;
+}
+
+.placeholder-hover:hover::-moz-placeholder {
+  color: #ff66d9;
+}
+
+.placeholder-hover:hover::-ms-input-placeholder {
+  color: #ff66d9;
+}
+
+.placeholder-hover:hover:-moz-placeholder {
+  color: #ff66d9;
+}
+
+.placeholder-hover:focus::-webkit-input-placeholder {
+  color: #ff66d9;
+}
+
+.placeholder-hover:focus::-moz-placeholder {
+  color: #ff66d9;
+}
+
+.placeholder-hover:focus::-ms-input-placeholder {
+  color: #ff66d9;
+}
+
+.placeholder-hover:focus:-moz-placeholder {
+  color: #ff66d9;
+}
+
+.pointer {
+  pointer-events: auto !important;
+}
+
+.pointer-none {
+  pointer-events: none !important;
+}
+
+.z-boost {
+  z-index: 1;
+}
+
+.button-plain {
+  padding: 0;
+  border: none;
+  font: inherit;
+  color: inherit;
+  background-color: transparent;
+  cursor: pointer;
+}
+
+.overflow-auto {
+  overflow: auto;
+}
+
+.nowrap {
+  white-space: nowrap;
+}
+
+.shadow {
+  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.1);
+}
+
+.vertical-bar {
+  width: 1px;
+  height: 25px;
+  background-color: $light-grey;
+}
+
+.horizontal-bar {
+  height: 1px;
+  width: 100%;
+}
+
+.warning-message {
+  display: block;
+  color: #eeb544;
+}
+
+.hide {
+  display: none;
+}
+
+.no-scroll {
+  overflow: hidden;
+}
+
+.overflow-hidden {
+  overflow: hidden;
+}
+
+.fixed-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1;
+}
+
+.flex-centered {
+  @extend %flex-centered;
+}

@@ -1,0 +1,84 @@
+@font-face {
+    font-family: 'latoregular';
+    src: url('../src/assets/fonts/lato-regular-webfont.woff2') format('woff2'),
+         url('../src/assets/fonts/lato-regular-webfont.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+
+.sans-serif {
+	font-family: $font-sans-serif;
+}
+
+.serif {
+	font-family: $font-serif;
+}
+
+.font-xs {
+	font-size: $font-xs;
+}
+
+.font-sm {
+	font-size: $font-sm;
+}
+
+.font-md {
+	font-size: $font-md;
+}
+
+.font-lg {
+	font-size: $font-lg;
+}
+
+.font-xl-1 {
+	font-size: $font-xl-1;
+}
+
+.font-xl-2 {
+	font-size: $font-xl-2;
+}
+
+.text-black {
+	color: black;
+}
+
+.text-grey {
+	color: $grey;
+}
+
+.text-grey-darker {
+	color: $grey-darker;
+}
+
+.text-light-grey {
+	color: $light-grey;
+}
+
+.capitalize {
+	text-transform: capitalize;
+}
+
+.text-underline-none {
+	color: $grey;
+	&:hover {
+		text-decoration: none;
+		color: darken($grey, 10%);
+	}
+}
+
+.hover-underline:hover{
+  text-decoration: underline;
+}
+
+.anchor-primary {
+  color: $magenta;
+  font-family: Verdana, Geneva, sans-serif;	
+		
+	&:hover {
+		color: darken($magenta, 10%)		
+	}
+}		
+
+.anchor-default {
+	color: $blue-link;
+}
