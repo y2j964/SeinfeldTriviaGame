@@ -1,26 +1,26 @@
 * {
-  box-sizing: border-box;  
+  box-sizing: border-box;
 }
 
 html {
-	scroll-behavior: smooth;
+  scroll-behavior: smooth;
 }
 
 ul,
 li {
-    list-style-type: none;
-    padding: 0px;
-    margin: 0px;
+  list-style-type: none;
+  padding: 0px;
+  margin: 0px;
 }
 
 img {
-    max-width: 100%;
-    height: auto;
+  max-width: 100%;
+  height: auto;
 }
 
 p,
 span {
-  font-family: Verdana, Geneva, sans-serif;
+  font-family: Helvetica, Arial;
 }
 
 a {
@@ -30,7 +30,7 @@ a {
 a:hover {
   text-decoration: underline;
   color: black;
-	cursor: pointer;
+  cursor: pointer;
 }
 
 a:focus {
@@ -43,20 +43,20 @@ a > svg,
 a > img,
 button > svg,
 button > img {
-	pointer-events: none;
+  pointer-events: none;
 }
 
 // input:focus{
-  // outline: none;
+// outline: none;
 // }
 
-[type="email"]:focus,
-[type="search"]:focus,
-[type="text"]:focus, 
-[type="password"]:focus {
+[type='email']:focus,
+[type='search']:focus,
+[type='text']:focus,
+[type='password']:focus {
   outline: none;
 }
 
 time {
-	font-size: $font-sm;
+  font-size: $font-sm;
 }

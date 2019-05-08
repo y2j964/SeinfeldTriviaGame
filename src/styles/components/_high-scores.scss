@@ -1,0 +1,42 @@
+.high-scores {
+  background-color: white;
+  color: #4dd2ff;
+  // background-image: linear-gradient(
+  //   to right,
+  //   #00134d 3%,
+  //   #4d79ff 43%,
+  //   #00134d 88%
+  // );
+
+  tbody {
+    border: 2px dashed #4dd2ff;
+  }
+
+  &__column-headers-group {
+    // border needs to match thickness of tbody border
+    border: 2px solid #4dd2ff;
+  }
+  &__column-headers {
+    color: white;
+    background-color: #4dd2ff;
+    font-family: 'Press Start 2P', cursive;
+    font-size: 14px;
+    // border: 2px solid #00e64d;
+  }
+  &__row--is-active {
+    border: 2px solid #ffb31a;
+    // color: white;
+  }
+
+  &__rank-entry,
+  &__name-entry,
+  &__score-entry {
+    padding: 0.75rem 0.75rem;
+    font-family: 'Press Start 2P', cursive;
+    font-size: 12px;
+
+    @include screen('md') {
+      padding: 0.75rem 1rem;
+    }
+  }
+}

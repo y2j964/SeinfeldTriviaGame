@@ -12,9 +12,32 @@
 @import 'base/sizing.scss';
 @import 'base/spacing.scss';
 @import 'base/typography.scss';
+@import 'components/high-scores.scss';
 @import 'layout/layout.scss';
 
-.card-intro {
+#user-initials {
+  width: 150px;
+  &:focus {
+    border: 2px solid #1f3c95;
+  }
+}
+
+.btn-primary {
+  background-color: #1f3c95;
+  font-family: Helvetica, Arial;
+  font-size: 0.875rem;
+
+  @include screen('md') {
+    font-size: 1rem;
+  }
+}
+
+.font-retro {
+  font-family: 'Press Start 2P', cursive;
+  text-shadow: 0 0 3px #ffb31a;
+}
+
+.intro-stage {
   display: block;
 
   &--is-hidden {
@@ -22,11 +45,49 @@
   }
 }
 
+.main-stage {
+  opacity: 1;
+  // transition: opacity 300ms ease-in-out;
+
+  &--is-hidden {
+    display: none;
+  }
+
+  &--is-fading {
+    // animation: fadeInOut 3s ease-in-out;
+  }
+}
+
+.end-stage {
+  @apply text-center;
+
+  &--is-hidden {
+    display: none;
+  }
+}
+
+@keyframes fadeInOut {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+.animation-none {
+  animation: none !important;
+}
+
 .question {
   position: relative;
-  height: 130px;
+  // one quote, in particular, is very long; so to prevent overflow, min-height is implemented
+  min-height: 130px;
   z-index: 1;
-  border-radius: 1.5em;
+  border-radius: 1em;
   color: white;
   background-image: linear-gradient(
     to right,
@@ -86,10 +147,12 @@
 }
 
 .btn-special {
-  @apply mb-1 text-base;
+  @apply mb-1 text-sm flex-grow;
   position: relative;
+  width: 70%;
   line-height: 50px;
   border-radius: 1.5em;
+  font-family: Helvetica, Arial;
   color: white;
   background-color: #0d0d0d;
   background-image: linear-gradient(
@@ -100,7 +163,11 @@
   );
 
   @include screen('md') {
-    @apply w-1/2 mb-0 mr-10;
+    @apply w-1/2 mb-0 text-base;
+
+    &:first-of-type {
+      @apply mr-10;
+    }
   }
 
   &:before {
@@ -136,11 +203,32 @@
 
   &__letter {
     color: #ffb31a;
-    // font-weight: 500;
+    font-size: 0.875rem;
+
+    @include screen('md') {
+      font-size: 1rem;
+    }
   }
 
   // only apply hover styling when not in --is-correct state
   &:not(.btn-special--is-correct):hover {
+    background-image: none;
+    background-color: #ffb31a;
+    color: black;
+
+    &:before {
+      border-right-color: #ffb31a;
+    }
+
+    &:after {
+      border-left-color: #ffb31a;
+    }
+    .btn-special__letter {
+      color: white;
+    }
+  }
+
+  &--is-selected {
     background-image: none;
     background-color: #ffb31a;
     color: black;
@@ -200,7 +288,4 @@
   width: 100%;
   height: 100%;
   opacity: 0.6;
-}
-.bg-y {
-  background-color: grey;
 }
