@@ -5,6 +5,9 @@ const questionText = document.querySelector('.question__text');
 // const [btnA, btnB, btnC, btnD] = document.querySelectorAll('.btn-special');
 const mainStage = document.querySelector('.main-stage');
 const endStage = document.querySelector('.end-stage');
+const scoreCheckEl = document.querySelector('.score-check');
+const highScoresTable = document.querySelector('.high-scores');
+const highScoresHeading = document.querySelector('.high-scores-heading');
 const nameEntry = Array.from(
   document.querySelectorAll('.high-scores__name-entry'),
 );
@@ -12,6 +15,9 @@ const highScoreEntry = Array.from(
   document.querySelectorAll('.high-scores__score-entry'),
 );
 const score = document.getElementById('score-total');
+let userInitials = document.getElementById('user-initials');
+const userInitialsForm = document.querySelector('.user-initials-form');
+const userInitialsSuccess = document.querySelector('.user-initials-success');
 const endScore = document.getElementById('end-score');
 
 let quotes;
@@ -26,8 +32,73 @@ function endGame() {
   mainStage.classList.add('main-stage--is-hidden');
   endStage.classList.remove('end-stage--is-hidden');
   endScore.textContent = scoreCount;
-  // if endScore
+  // just compare score count to lowest high score
+  if (!scoreCount > highScores[highScores.length - 1].score) {
+    return;
+  }
+  scoreCheckEl.classList.remove('scoreCheckEl--is-remove');
+  // userInitials = userInitials.value;
+  // // store in object to be consistent with default storage objects
+  // const newEntry = { name: userInitials, score: scoreCount };
+  // highScores.push(newEntry);
+  // // find correct placement of newEntry in highScore table
+  // highScores.sort((a, b) => b.score - a.score);
+  // // remove lowest oldEntry from highScore table
+  // highScores.pop();
+  // // load new entry into table
+  // loadHighScores();
+  // // find index of newEntry so that we can highlight user's score
+  // const newEntryIndex = highScores.findIndex(
+  //   entry => entry.name === initials && entry.score === newScore,
+  // );
+  // const newEntryElement = document.querySelector(
+  //   `tbody tr:nth-of-type(${newEntryIndex + 1})`,
+  // );
+  // newEntryElement.classList.add('high-scores__row--is-active');
+  // }
 }
+function submitInitials(e) {
+  e.preventDefault();
+  scoreCount = 10;
+  userInitials = userInitials.value;
+  // store in object to be consistent with default storage objects
+  const newEntry = { name: userInitials, score: scoreCount };
+  highScores.push(newEntry);
+  // find correct placement of newEntry in highScore table
+  highScores.sort((a, b) => b.score - a.score);
+  // remove lowest oldEntry from highScore table
+  highScores.pop();
+  // load new entry into table
+  loadHighScores();
+  // find index of newEntry so that we can highlight user's score
+  const newEntryIndex = highScores.findIndex(
+    entry => entry.name === newEntry.name && entry.score === newEntry.score,
+  );
+  const newEntryElement = document.querySelector(
+    `tbody tr:nth-of-type(${newEntryIndex + 1})`,
+  );
+  userInitialsForm.classList.add('user-initials-form--is-collapsing');
+  // after transition is over . . .
+  setTimeout(() => {
+    userInitialsForm.classList.add('user-initials-form--is-hidden');
+    userInitialsForm.classList.remove('user-initials-form--is-collapsing');
+    userInitialsSuccess.classList.remove('hidden');
+    setTimeout(() => {
+      newEntryElement.classList.add('high-scores__row--is-active');
+      highScoresHeading.focus();
+      highScoresTable.scrollIntoView({ behavior: 'smooth' });
+    }, 2000);
+  }, 800);
+
+  // newEntryElement.classList.add('high-scores__row--is-active');
+  // setTimeout(() => {
+  // highScoresHeading.focus();
+  // highScoresTable.scrollIntoView({ behavior: 'smooth' });
+  // console.log(document.activeElement);
+  // }, 1200);
+}
+
+userInitialsForm.addEventListener('submit', submitInitials);
 
 if (localStorage.getItem('highScores') === null) {
   highScores = [
@@ -40,7 +111,7 @@ if (localStorage.getItem('highScores') === null) {
     { name: 'KC', score: 13 },
     { name: 'GC', score: 6 },
     { name: 'KC', score: 3 },
-    { name: 'JS', score: 5 },
+    { name: 'JS', score: 4 },
   ];
   // ensure list is sorted;
   highScores.sort((a, b) => b.score - a.score);
@@ -61,23 +132,6 @@ function loadHighScores() {
 }
 
 loadHighScores();
-const newScore = 23;
-let initials = 'NEW';
-const newEntry = { name: initials, score: newScore };
-if (newScore > highScores[highScores.length - 1].score) {
-  highScores.push(newEntry);
-  highScores.sort((a, b) => b.score - a.score);
-  // only keep track of top 10 scores
-  highScores.pop();
-  loadHighScores();
-  const newEntryIndex = highScores.findIndex(
-    entry => entry.name === initials && entry.score === newScore,
-  );
-  const newEntryElement = document.querySelector(
-    `tbody tr:nth-of-type(${newEntryIndex + 1})`,
-  );
-  newEntryElement.classList.add('high-scores__row--is-active');
-}
 
 function toggleCorrectBtn(e) {
   // check if this is first run by checking if their is an associated event
@@ -175,6 +229,24 @@ runGame();
 
 startBtn.addEventListener('click', runGame);
 
+// const newScore = 23;
+// let initials = 'NEW';
+// const newEntry = { name: initials, score: newScore };
+// if (newScore > highScores[highScores.length - 1].score) {
+//   highScores.push(newEntry);
+//   highScores.sort((a, b) => b.score - a.score);
+//   // only keep track of top 10 scores
+//   highScores.pop();
+//   loadHighScores();
+//   const newEntryIndex = highScores.findIndex(
+//     entry => entry.name === initials && entry.score === newScore,
+//   );
+//   const newEntryElement = document.querySelector(
+//     `tbody tr:nth-of-type(${newEntryIndex + 1})`,
+//   );
+//   newEntryElement.classList.add('high-scores__row--is-active');
+// }
+
 // function runGame() {
 //   data =>
 //   console.log(data.quotes[randomNum(data.quotes.length)]),
@@ -189,3 +261,11 @@ startBtn.addEventListener('click', runGame);
 // }, '');
 // console.log(longest);
 // loadCard();
+
+// const highScoresTableBottom = highScoresTable.getBoundingClientRect().bottom;
+// window.scroll({
+//   bottom: highScoresTableBottom,
+//   behavior: 'smooth',
+// });
+// window.scrollTo(0, highScoresTableBottom);
+// console.log(`window scroll to ${highScoresTableBottom}`);

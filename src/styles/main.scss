@@ -16,9 +16,42 @@
 @import 'layout/layout.scss';
 
 #user-initials {
-  width: 150px;
+  width: 135px;
   &:focus {
     border: 2px solid #1f3c95;
+  }
+}
+
+@keyframes collapse {
+  0% {
+    transform: scale(1, 1);
+  }
+  99% {
+    transform: scale(0, 1);
+  }
+  100% {
+    transform: scale(0, 0);
+  }
+}
+
+.user-initials-form {
+  display: flex;
+  transition: transform 500ms ease-in-out;
+
+  &--is-collapsing {
+    animation: collapse 800ms forwards;
+  }
+
+  &--is-hidden {
+    display: none;
+  }
+}
+
+.score-check {
+  display: block;
+
+  &--is-hidden {
+    display: none;
   }
 }
 

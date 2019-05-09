@@ -39,7 +39,7 @@ bit of overflow (the size of a the width of a scrollbar). So we hide the x overf
       </div>
     </div>
     <!-- <div class="card card--is-hidden"> -->
-    <div class="main-stage">
+    <div class="main-stage main-stage--is-hidden">
       <p class="text-center font-bold text-lg md:text-xl mb-3">Score: <span id="score-total">1</span></p>
       <div class="question flex justify-center items-center px-6 mb-8">
         <p class="question__text text-center text-sm md:text-base"></p>
@@ -69,25 +69,31 @@ bit of overflow (the size of a the width of a scrollbar). So we hide the x overf
       </div>
     </div>
     <!-- <div class="end-stage hidden"> -->
-    <div class="end-stage end-stage--is-hidden">
+    <div class="end-stage ">
       <p class="text-xl md:text-2xl text-center mb-8">Aw, no more points for you. Your final score was <span
           class="block text-3xl font-bold mt-8" id="end-score"></span>
       </p>
-      <p class="mb-10">Looks like you cracked the Top 10 high scores. Give me your initials, and we'll immortalize your
-        performance.
-      </p>
-      <form class="flex justify-center items-center mb-10 " action="">
-        <label class="text-grey font-bold mr-3" for="user-initials">Initials:</label>
-        <input class="appearance-none border rounded py-2 px-3 text-grey-darker leading-tight" id="user-initials"
-          type="text" maxlength="3" placeholder="e.g. JM or JCM">
-      </form>
+      <div class="score-check">
+        <p class="mb-10">Looks like you cracked the Top 10 high scores. Give me your initials, and we'll immortalize
+          your
+          performance.
+        </p>
+        <form class="justify-center items-center mb-10 user-initials-form" action="">
+          <label class="text-grey font-bold mr-2" for="user-initials">Initials:</label>
+          <input class="appearance-none border rounded py-2 px-3 mr-2 text-grey-darker leading-tight" id="user-initials"
+            type="text" maxlength="3" placeholder="e.g. JM or JCM">
+          <button class="px-3 py-2 btn-primary rounded text-white" id="user-initials-submit"
+            type="submit">Immortalize</button>
+        </form>
+        <p class="mb-10 user-initials-success hidden">Cool. We'll record this score for future games!</p>
+      </div>
       <h2 class="text-xl md:text-2xl text-center mb-8 font-accent">Do you want to play again?</h2>
       <div class="flex justify-center mb-10">
         <button class="btn-primary px-6 py-4 rounded-lg text-white">Yes</button>
         <!-- <button class="btn-primary px-6 py-4 mb-2 mr-8 b-2 border-yel-low rounded-lg text-white">No</button> -->
       </div>
       <section class="mb-4">
-        <h2 class="text-center text-xl md:text-2xl mb-2 font-retro">High Scores</h2>
+        <h2 class="text-center text-xl md:text-2xl mb-2 font-retro high-scores-heading" tabindex="-1">High Scores</h2>
         <table class="w-full high-scores">
           <thead>
             <tr class="high-scores__column-headers-group">
