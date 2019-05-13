@@ -36,7 +36,6 @@
 
 .user-initials-form {
   display: flex;
-  transition: transform 500ms ease-in-out;
 
   &--is-collapsing {
     animation: collapse 800ms forwards;
@@ -44,6 +43,82 @@
 
   &--is-hidden {
     display: none;
+  }
+}
+
+high-scores__row:hover .span1,
+high-scores__row:hover .span3 {
+  // 6px is derived from transparent-border-width * 3
+  width: calc(100% + 6px);
+}
+
+high-scores__row:hover .span2 {
+  height: calc(100% + 6px);
+}
+
+high-scores__row:hover .span4 {
+  // additional 2px (size of transparent border) to compensate for how top border started
+  height: calc(100% + 8px);
+}
+
+.table-row-border {
+  display: block;
+  position: absolute;
+  background-color: #ffb31a;
+
+  &-top {
+    left: 0px;
+    top: -2px;
+    width: 0;
+    // height/width needs to match transparent border of relative el
+    height: 2px;
+    transition: width 350ms linear;
+
+    &--is-drawing {
+      width: 100%;
+    }
+  }
+
+  &-right {
+    right: -2px;
+    top: -2px;
+    width: 2px;
+    height: 0;
+    transition: height 350ms linear;
+
+    &--is-drawing {
+      height: calc(100% + 4px);
+    }
+  }
+  &-bottom {
+    right: 0px;
+    bottom: -2px;
+    width: 0;
+    height: 2px;
+    // transition delays need to be proportional; for four corners, it is 0s, 1s, 350ms, 3s.
+    transition: width 350ms linear;
+
+    &--is-drawing {
+      width: 100%;
+    }
+  }
+  &-left {
+    left: -2px;
+    bottom: -2px;
+    width: 2px;
+    height: 0;
+    transition: height 350ms linear;
+
+    &--is-drawing {
+      height: calc(100% + 4px);
+    }
+  }
+}
+
+.high-scores-heading {
+  text-shadow: 0 0 3px #ffb31a;
+  &:focus {
+    outline-width: 0px;
   }
 }
 
@@ -67,7 +142,6 @@
 
 .font-retro {
   font-family: 'Press Start 2P', cursive;
-  text-shadow: 0 0 3px #ffb31a;
 }
 
 .intro-stage {
@@ -128,37 +202,6 @@
     #4d79ff 43%,
     #00134d 88%
   );
-
-  // &:before {
-  //   display: block;
-  //   content: '';
-  //   position: absolute;
-  //   z-index: 1;
-  //   width: 0;
-  //   height: 0;
-  //   top: 50%;
-  //   right: 100%;
-  //   transform: translate(9%, -50%);
-  //   height here is 95px; so 130 * 0.4117647058823529
-  //   border-top: 53.5px solid transparent;
-  //   border-bottom: 53.5px solid transparent;
-  //   border-right: 53.5px solid #00134d;
-  // }
-
-  // &:after {
-  //   display: block;
-  //   content: '';
-  //   position: absolute;
-  //   z-index: 1;
-  //   width: 0;
-  //   height: 0;
-  //   top: 50%;
-  //   left: 100%;
-  //   transform: translate(-9%, -50%);
-  //   border-top: 53.5px solid transparent;
-  //   border-bottom: 53.5px solid transparent;
-  //   border-left: 53.5px solid #00134d;
-  // }
 }
 
 .answers__group {
