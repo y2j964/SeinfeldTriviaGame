@@ -81,7 +81,146 @@ const highScores = (function highScoresScope() {
   };
 }());
 
+let newEntryElementRank;
+let newEntryElementName;
+let newEntryElementScore;
+
 highScores.getFromStorage();
+function createTdSpansForAnimation() {
+  // find index of newEntry so that we can highlight user's score
+  const newEntryIndex = highScoresArray.findIndex(
+    entry => entry.name === newEntry.name && entry.score === newEntry.score,
+  );
+  const newEntryElement = document.querySelector(`tbody tr:nth-of-type(${newEntryIndex + 1})`);
+  newEntryElementRank = newEntryElement.querySelector('.high-scores__rank-entry');
+  newEntryElementName = newEntryElement.querySelector('.high-scores__name-entry');
+  newEntryElementScore = newEntryElement.querySelector('.high-scores__score-entry');
+
+  // animation is built out of spans, bc you can't set tr to position relative
+  // you can however set td to relative
+  const tdRankSpans = [];
+  const tdSpan1 = document.createElement('span');
+  tdSpan1.className = 'table-row-border table-row-border-top';
+  const tdSpan2 = document.createElement('span');
+  tdSpan2.className = 'table-row-border table-row-border-bottom';
+  const tdSpan3 = document.createElement('span');
+  tdSpan3.className = 'table-row-border table-row-border-left';
+  tdRankSpans.push(tdSpan1, tdSpan2, tdSpan3);
+
+  const tdNameSpans = [];
+  const tdSpan4 = document.createElement('span');
+  tdSpan4.className = 'table-row-border table-row-border-top';
+  const tdSpan5 = document.createElement('span');
+  tdSpan5.className = 'table-row-border table-row-border-bottom';
+  tdNameSpans.push(tdSpan4, tdSpan5);
+
+  const tdScoreSpans = [];
+  const tdSpan6 = document.createElement('span');
+  tdSpan6.classList = 'table-row-border table-row-border-top';
+  const tdSpan7 = document.createElement('span');
+  tdSpan7.className = 'table-row-border table-row-border-right';
+  const tdSpan8 = document.createElement('span');
+  tdSpan8.className = 'table-row-border table-row-border-bottom';
+  tdScoreSpans.push(tdSpan6, tdSpan7, tdSpan8);
+  return [tdRankSpans, tdNameSpans, tdScoreSpans];
+}
+
+function addTdSpansToDOM(tdRankSpans, tdNameSpans, tdScoreSpans) {
+  // append spans in fragments to minimize repaints
+  const rankFragment = document.createDocumentFragment();
+  tdRankSpans.forEach(span => rankFragment.appendChild(span));
+  newEntryElementRank.appendChild(rankFragment);
+
+  const nameFragment = document.createDocumentFragment();
+  tdNameSpans.forEach(span => nameFragment.appendChild(span));
+  newEntryElementName.appendChild(nameFragment);
+
+  const scoreFragment = document.createDocumentFragment();
+  tdScoreSpans.forEach(span => scoreFragment.appendChild(span));
+  newEntryElementScore.appendChild(scoreFragment);
+}
+
+const tableRowAnimation = function tableRowAnimationScope() {
+  // this function specifically is set up with outer scope so that we only grab the outer variables once
+  // it also allows us to init the piece counter
+  return new Promise((resolve, reject) => {
+    setTimeout(() => {
+      console.log('scope');
+      // grab all spans in the order in which we want to draw border animation
+      // we want to draw the border from the top left to top right, top right to bottom right,
+      // bottom right to bottom left, and bottom left to top right
+      const tableRowBorderTop = Array.from(document.querySelectorAll('.table-row-border-top'));
+      const tableRowBorderRight = document.querySelector('.table-row-border-right');
+      const tableRowBorderBottom = Array.from(
+        document.querySelectorAll('.table-row-border-bottom'),
+      );
+      const tableRowBorderLeft = document.querySelector('.table-row-border-left');
+
+      borderTransitionPieces = [
+        ...tableRowBorderTop,
+        tableRowBorderRight,
+        ...tableRowBorderBottom.reverse(),
+        tableRowBorderLeft,
+      ];
+      // init counter;
+      let piece = 0;
+
+      function drawBorder() {
+        if (piece >= borderTransitionPieces.length) {
+          return;
+        }
+        if (borderTransitionPieces[piece].classList.contains('table-row-border-top')) {
+          borderTransitionPieces[piece].classList.add('table-row-border-top--is-drawing');
+        }
+        if (borderTransitionPieces[piece].classList.contains('table-row-border-right')) {
+          borderTransitionPieces[piece].classList.add('table-row-border-right--is-drawing');
+        }
+        if (borderTransitionPieces[piece].classList.contains('table-row-border-bottom')) {
+          borderTransitionPieces[piece].classList.add('table-row-border-bottom--is-drawing');
+        }
+        if (borderTransitionPieces[piece].classList.contains('table-row-border-left')) {
+          borderTransitionPieces[piece].classList.add('table-row-border-left--is-drawing');
+        }
+        piece += 1;
+        // delay time needs to be identical to the transition-duration time for table-row-border-top,
+        // table-row-border-right, table-row-border-bottom, and table-row-border-left
+        setTimeout(drawBorder, 350);
+      }
+      resolve();
+      drawBorder();
+    }, 800);
+  });
+};
+
+function scrollToHighScoresTable() {
+  return new Promise((resolve, reject) => {
+    setTimeout(() => {
+      highScoresHeading.focus();
+      highScoresTable.scrollIntoView({ behavior: 'smooth' });
+      resolve();
+    }, 2000);
+  });
+}
+
+// remove elements and reveal success message
+function userInitialSubmissionSuccess() {
+  // this and the previous 2 functions return Promises to keep them decoupled: they can be chained together if desired,
+  // or they can just be used by themselves
+  return new Promise((resolve, reject) => {
+    setTimeout(() => {
+      userInitialsForm.classList.add('user-initials-form--is-hidden');
+      // restore to non-collapsed default state
+      userInitialsForm.classList.remove('user-initials-form--is-collapsing');
+      // hidden form prompt text
+      formPrompt.classList.add('hidden');
+      // display successful submission text
+      userInitialsSuccess.classList.remove('hidden');
+      resolve();
+    }, 800);
+  });
+}
+
+// transition messages
 
 function submitInitials(e) {
   e.preventDefault();
@@ -89,91 +228,15 @@ function submitInitials(e) {
   highScores.update();
   // load new entry into table
   highScores.load();
-  // find index of newEntry so that we can highlight user's score
-  const newEntryIndex = highScoresArray.findIndex(
-    entry => entry.name === newEntry.name && entry.score === newEntry.score,
-  );
-  const newEntryElement = document.querySelector(`tbody tr:nth-of-type(${newEntryIndex + 1})`);
-  const newEntryElementRank = newEntryElement.querySelector('.high-scores__rank-entry');
-  const newEntryElementName = newEntryElement.querySelector('.high-scores__name-entry');
-  const newEntryElementScore = newEntryElement.querySelector('.high-scores__score-entry');
-
-  // animation is built out of spans, bc you can't set tr to position relative
-  // you can however set td to relative
-  const trRankSpans = [];
-  const trSpan1 = document.createElement('span');
-  trSpan1.className = 'table-row-border table-row-border-top';
-  const trSpan2 = document.createElement('span');
-  trSpan2.className = 'table-row-border table-row-border-bottom';
-  const trSpan3 = document.createElement('span');
-  trSpan3.className = 'table-row-border table-row-border-left';
-  trRankSpans.push(trSpan1, trSpan2, trSpan3);
-
-  const trNameSpans = [];
-  const trSpan4 = document.createElement('span');
-  trSpan4.className = 'table-row-border table-row-border-top';
-  const trSpan5 = document.createElement('span');
-  trSpan5.className = 'table-row-border table-row-border-bottom';
-  trNameSpans.push(trSpan4, trSpan5);
-
-  const trScoreSpans = [];
-  const trSpan6 = document.createElement('span');
-  trSpan6.classList = 'table-row-border table-row-border-top';
-  const trSpan7 = document.createElement('span');
-  trSpan7.className = 'table-row-border table-row-border-right';
-  const trSpan8 = document.createElement('span');
-  trSpan8.className = 'table-row-border table-row-border-bottom';
-  trScoreSpans.push(trSpan6, trSpan7, trSpan8);
-
-  // append spans in fragments to minimize repaints
-  const rankFragment = document.createDocumentFragment();
-  trRankSpans.forEach(span => rankFragment.appendChild(span));
-  newEntryElementRank.appendChild(rankFragment);
-
-  const nameFragment = document.createDocumentFragment();
-  trNameSpans.forEach(span => nameFragment.appendChild(span));
-  newEntryElementName.appendChild(nameFragment);
-
-  const scoreFragment = document.createDocumentFragment();
-  trScoreSpans.forEach(span => scoreFragment.appendChild(span));
-  newEntryElementScore.appendChild(scoreFragment);
-
-  const tableRowBorderTop = Array.from(document.querySelectorAll('.table-row-border-top'));
-  const tableRowBorderRight = document.querySelector('.table-row-border-right');
-  const tableRowBorderBottom = Array.from(document.querySelectorAll('.table-row-border-bottom'));
-  const tableRowBorderLeft = document.querySelector('.table-row-border-left');
-
-  borderTransitionPieces = [
-    ...tableRowBorderTop,
-    tableRowBorderRight,
-    ...tableRowBorderBottom.reverse(),
-    tableRowBorderLeft,
-  ];
-
+  // grab return arrays created by createTdSpansForAnimation
+  const [tdRankSpans, tdNameSpans, tdScoreSpans] = createTdSpansForAnimation();
+  addTdSpansToDOM(tdRankSpans, tdNameSpans, tdScoreSpans);
+  // collapse form upon valid submission
   userInitialsForm.classList.add('user-initials-form--is-collapsing');
-  // after transition is over . . .
-  setTimeout(() => {
-    // function hideCollapsedEl (el) {}
-    userInitialsForm.classList.add('user-initials-form--is-hidden');
-    // restore to non-collapsed default state
-    userInitialsForm.classList.remove('user-initials-form--is-collapsing');
-    // hidden form prompt text
-    formPrompt.classList.add('hidden');
-    // display successful submission text
-    userInitialsSuccess.classList.remove('hidden');
-    setTimeout(() => {
-      highScoresHeading.focus();
-      highScoresTable.scrollIntoView({ behavior: 'smooth' });
-      setTimeout(drawBorder, 800);
-    }, 2000);
-  }, 800);
-}
-// InitialSubmissionSuccessUI
-// (1)remove elements and display success, (2)scrollToHighScoresTable, (3)drawBorder
-
-function scrollToHighScoresTable() {
-  highScoresHeading.focus();
-  highScoresTable.scrollIntoView({ behavior: 'smooth' });
+  // after collapse transition is over . . .
+  userInitialSubmissionSuccess()
+    .then(() => scrollToHighScoresTable())
+    .then(() => tableRowAnimation());
 }
 
 function resetGame() {
@@ -192,29 +255,6 @@ function resetGame() {
 playAgainBtn.addEventListener('click', resetGame);
 
 userInitialsForm.addEventListener('submit', submitInitials);
-
-let piece = 0;
-function drawBorder() {
-  if (piece >= borderTransitionPieces.length) {
-    return;
-  }
-  if (borderTransitionPieces[piece].classList.contains('table-row-border-top')) {
-    borderTransitionPieces[piece].classList.add('table-row-border-top--is-drawing');
-  }
-  if (borderTransitionPieces[piece].classList.contains('table-row-border-right')) {
-    borderTransitionPieces[piece].classList.add('table-row-border-right--is-drawing');
-  }
-  if (borderTransitionPieces[piece].classList.contains('table-row-border-bottom')) {
-    borderTransitionPieces[piece].classList.add('table-row-border-bottom--is-drawing');
-  }
-  if (borderTransitionPieces[piece].classList.contains('table-row-border-left')) {
-    borderTransitionPieces[piece].classList.add('table-row-border-left--is-drawing');
-  }
-  piece += 1;
-  // delay time needs to be identical to the transition-duration time for table-row-border-top,
-  // table-row-border-right, table-row-border-bottom, and table-row-border-left
-  setTimeout(drawBorder, 350);
-}
 
 function endGame() {
   mainStage.classList.add('main-stage--is-hidden');
