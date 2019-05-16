@@ -1,4 +1,4 @@
-let isPlaying = false;
+const isPlaying = false;
 const startBtn = document.getElementById('startGame');
 const introStage = document.querySelector('.intro-stage');
 const questionText = document.querySelector('.question__text');
@@ -17,6 +17,7 @@ const userInitialsForm = document.querySelector('.user-initials-form');
 const userInitialsSuccess = document.querySelector('.user-initials-success');
 const endScore = document.getElementById('end-score');
 const playAgainBtn = document.getElementById('play-again');
+const footerSmallPrint = document.querySelector('.footer-small-print');
 
 let borderTransitionPieces;
 let quotes;
@@ -24,13 +25,15 @@ let correctAnswer;
 let selectedBtn;
 let correctBtn;
 let flashCount = 0;
+
 let scoreCount;
 let highScoresArray;
-
 let newEntry;
+let newEntryElementRank;
+let newEntryElementName;
+let newEntryElementScore;
 
 const highScores = (function highScoresScope() {
-  // let newEntry;
   function getHighScoresFromStorage() {
     if (localStorage.getItem('highScoresArray') === null) {
       highScoresArray = [
@@ -64,7 +67,6 @@ const highScores = (function highScoresScope() {
     }
   }
   function updateHighScores() {
-    scoreCount = 10;
     userInitials = userInitials.value;
     // store in object to be consistent with default storage objects
     newEntry = { name: userInitials, score: scoreCount };
@@ -73,6 +75,7 @@ const highScores = (function highScoresScope() {
     highScoresArray.sort((a, b) => b.score - a.score);
     // remove lowest oldEntry from highScore table
     highScoresArray.pop();
+    localStorage.setItem('highScoresArray', JSON.stringify(highScoresArray));
   }
   return {
     getFromStorage: getHighScoresFromStorage,
@@ -81,17 +84,14 @@ const highScores = (function highScoresScope() {
   };
 }());
 
-let newEntryElementRank;
-let newEntryElementName;
-let newEntryElementScore;
-
-highScores.getFromStorage();
-function createTdSpansForAnimation() {
+// highScores.getFromStorage();
+const createTdSpansForAnimation = function createTdSpansForAnimation() {
   // find index of newEntry so that we can highlight user's score
   const newEntryIndex = highScoresArray.findIndex(
     entry => entry.name === newEntry.name && entry.score === newEntry.score,
   );
   const newEntryElement = document.querySelector(`tbody tr:nth-of-type(${newEntryIndex + 1})`);
+  newEntryElement.setAttribute('aria-label', 'Your performance immortalized');
   newEntryElementRank = newEntryElement.querySelector('.high-scores__rank-entry');
   newEntryElementName = newEntryElement.querySelector('.high-scores__name-entry');
   newEntryElementScore = newEntryElement.querySelector('.high-scores__score-entry');
@@ -123,9 +123,9 @@ function createTdSpansForAnimation() {
   tdSpan8.className = 'table-row-border table-row-border-bottom';
   tdScoreSpans.push(tdSpan6, tdSpan7, tdSpan8);
   return [tdRankSpans, tdNameSpans, tdScoreSpans];
-}
+};
 
-function addTdSpansToDOM(tdRankSpans, tdNameSpans, tdScoreSpans) {
+const addTdSpansToDOM = function addTdSpansToDOM(tdRankSpans, tdNameSpans, tdScoreSpans) {
   // append spans in fragments to minimize repaints
   const rankFragment = document.createDocumentFragment();
   tdRankSpans.forEach(span => rankFragment.appendChild(span));
@@ -138,7 +138,7 @@ function addTdSpansToDOM(tdRankSpans, tdNameSpans, tdScoreSpans) {
   const scoreFragment = document.createDocumentFragment();
   tdScoreSpans.forEach(span => scoreFragment.appendChild(span));
   newEntryElementScore.appendChild(scoreFragment);
-}
+};
 
 const tableRowAnimation = function tableRowAnimationScope() {
   // this function specifically is set up with outer scope so that we only grab the outer variables once
@@ -187,12 +187,13 @@ const tableRowAnimation = function tableRowAnimationScope() {
         setTimeout(drawBorder, 350);
       }
       resolve();
+      // call drawBorder on execution on tableRowAnimation
       drawBorder();
     }, 800);
   });
 };
 
-function scrollToHighScoresTable() {
+const scrollToHighScoresTable = function scrollToHighScoresTable() {
   return new Promise((resolve, reject) => {
     setTimeout(() => {
       highScoresHeading.focus();
@@ -200,10 +201,10 @@ function scrollToHighScoresTable() {
       resolve();
     }, 2000);
   });
-}
+};
 
 // remove elements and reveal success message
-function userInitialSubmissionSuccess() {
+const userInitialSubmissionSuccess = function userInitialSubmissionSuccess() {
   // this and the previous 2 functions return Promises to keep them decoupled: they can be chained together if desired,
   // or they can just be used by themselves
   return new Promise((resolve, reject) => {
@@ -218,11 +219,11 @@ function userInitialSubmissionSuccess() {
       resolve();
     }, 800);
   });
-}
+};
 
 // transition messages
 
-function submitInitials(e) {
+const submitInitials = function submitInitials(e) {
   e.preventDefault();
   // update new entry into highScores array
   highScores.update();
@@ -237,39 +238,51 @@ function submitInitials(e) {
   userInitialSubmissionSuccess()
     .then(() => scrollToHighScoresTable())
     .then(() => tableRowAnimation());
-}
+};
 
-function resetGame() {
-  userInitialsSuccess.classList.remove('hidden');
+const resetGame = function resetGame() {
+  // reset score
+  scoreCount = 0;
   // remove all trSpan children of respective elements
-  while (newEntryElementRank.firstElementChild) {
-    newEntryElementRank.removeChild(newEntryElementRank.firstElementChild);
+  if (newEntryElementName) {
+    while (newEntryElementRank.firstElementChild) {
+      newEntryElementRank.removeChild(newEntryElementRank.firstElementChild);
+    }
+    while (newEntryElementName.firstElementChild) {
+      newEntryElementName.removeChild(newEntryElementName.firstElementChild);
+    }
+    while (newEntryElementScore.firstElementChild) {
+      newEntryElementScore.removeChild(newEntryElementScore.firstElementChild);
+    }
+    // go parent node (the row) and . . .
+    newEntryElementScore.parentNode.removeAttribute('aria-label');
   }
-  while (newEntryElementName.firstElementChild) {
-    newEntryElementName.removeChild(newEntryElementName.firstElementChild);
-  }
-  while (newEntryElementScore.firstElementChild) {
-    newEntryElementScore.removeChild(newEntryElementScore.firstElementChild);
-  }
-}
+  userInitialsSuccess.classList.add('hidden');
+  endStage.classList.add('end-stage--is-hidden');
+  footerSmallPrint.classList.add('hidden');
+  runGame();
+};
 playAgainBtn.addEventListener('click', resetGame);
 
 userInitialsForm.addEventListener('submit', submitInitials);
 
-function endGame() {
+const endGame = function endGame() {
+  selectedBtn.classList.remove('btn-special--is-selected');
+  correctBtn.classList.remove('btn-special--is-correct');
   mainStage.classList.add('main-stage--is-hidden');
   endStage.classList.remove('end-stage--is-hidden');
   endScore.textContent = scoreCount;
   // just compare score count to lowest high score
-  if (!scoreCount > highScoresArray[highScoresArray.length - 1].score) {
+  highScores.getFromStorage();
+
+  if (scoreCount < highScoresArray[highScoresArray.length - 1].score) {
     return;
   }
-  scoreCheckEl.classList.remove('scoreCheckEl--is-hidden');
-  highScores.getFromStorage();
+  scoreCheckEl.classList.remove('score-check--is-hidden');
   highScores.load();
-}
+};
 
-function toggleCorrectBtn(e) {
+const toggleCorrectBtn = function toggleCorrectBtn(e) {
   // check if this is first run by checking if their is an associated event
   if (e) {
     console.log(correctBtn);
@@ -292,29 +305,29 @@ function toggleCorrectBtn(e) {
   if (flashCount === 6 && selectedBtn !== correctBtn) {
     setTimeout(endGame, 2000);
   }
-}
+};
 
-function checkAnswerValidity(e) {
+const checkAnswerValidity = function checkAnswerValidity(e) {
   if (!e.target.classList.contains('btn-special')) {
     return;
   }
   correctBtn = mainStage.querySelector(`#${correctAnswer.toLowerCase()}`);
   toggleCorrectBtn(e);
-}
+};
 
-function transitionCard() {
+const transitionCard = function transitionCard() {
   mainStage.classList.add('main-stage--is-fading');
   console.log('transition');
   correctBtn.classList.remove('btn-special--is-correct');
   selectedBtn.classList.remove('btn-special--is-selected');
   loadCard();
-}
+};
 
 function randomNum(max) {
   return Math.floor(Math.random() * Math.floor(max));
 }
 
-function fetchQuotes(url) {
+const fetchQuotes = function fetchQuotes(url) {
   return new Promise((resolve, reject) => {
     const xhr = new XMLHttpRequest();
     xhr.open('GET', url, true);
@@ -322,11 +335,9 @@ function fetchQuotes(url) {
     xhr.onerror = () => reject(xhr.statusText);
     xhr.send();
   });
-}
+};
 
-// quote, choiceA, choiceB, choiceC, choiceD,
-
-function loadCard() {
+const loadCard = function loadCard() {
   // mainStage.classList.remove('main-stage--is-fading');
   const randomIndex = randomNum(quotes.length);
   const quoteObj = quotes[randomIndex];
@@ -337,13 +348,13 @@ function loadCard() {
   questionText.textContent = `"${quote}"`;
   // remove random quote from quotes array
   quotes.splice(randomIndex, 1);
-}
+};
 
 mainStage.addEventListener('click', checkAnswerValidity);
 
-function runGame() {
-  isPlaying = true;
+const runGame = function runGame() {
   introStage.classList.add('intro-stage--is-hidden');
+  // isPlaying = true;
   fetchQuotes('https://seinfeld-quotes.herokuapp.com/quotes').then((data) => {
     // there are a few quotes in this array that aren't said by Jerry, George, Elaine, or Kramer;
     // We're not interested in those quotes, so we'll filter them out
@@ -354,12 +365,14 @@ function runGame() {
         || (quote.author === 'Kramer' && quote.quote.length < 300),
     );
     scoreCount = 0;
+    mainStage.classList.remove('main-stage--is-hidden');
+    footerSmallPrint.classList.remove('hidden');
     score.textContent = scoreCount;
     loadCard(quotes);
   });
-}
+};
 
-runGame();
+// runGame();
 // if answer is right, increment score and cue up next question
 
 startBtn.addEventListener('click', runGame);

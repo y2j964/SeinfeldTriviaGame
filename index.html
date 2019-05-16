@@ -22,7 +22,6 @@ bit of overflow (the size of a the width of a scrollbar). So we hide the x overf
     <h1 class="text-3xl md:text-4xl m-0 font-accent">Seinfeld Quote Game</h1>
   </header>
   <main class="container mx-auto px-5">
-    <!-- <div class="intro-stage intro-stage--is-hidden"> -->
     <div class="intro-stage intro-stage--is-hidden">
       <p class="text-lg md:text-xl mb-2 ">You think you know Seinfeld? Well, we shall see who the true Wiz is. The rules
         are
@@ -38,10 +37,10 @@ bit of overflow (the size of a the width of a scrollbar). So we hide the x overf
           Time!</button>
       </div>
     </div>
-    <!-- <div class="card card--is-hidden"> -->
     <div class="main-stage main-stage--is-hidden">
-      <p class="text-center font-bold text-lg md:text-xl mb-3">Score: <span id="score-total">1</span></p>
-      <div class="question flex justify-center items-center px-6 mb-8">
+      <p class="text-center font-bold text-lg md:text-xl mb-3" aria-live="polite" aria-atomic="true">Score: <span
+          id="score-total">1</span></p>
+      <div class="question flex justify-center items-center px-6 py-4 mb-8">
         <p class="question__text text-center text-sm md:text-base"></p>
       </div>
       <div class="answers flex flex-col">
@@ -68,12 +67,11 @@ bit of overflow (the size of a the width of a scrollbar). So we hide the x overf
         </div>
       </div>
     </div>
-    <!-- <div class="end-stage hidden"> -->
     <div class="end-stage ">
       <p class="text-xl md:text-2xl text-center mb-8">Aw, no more points for you. Your final score was <span
           class="block text-3xl font-bold mt-8" id="end-score"></span>
       </p>
-      <div class="score-check">
+      <div class="score-check score-check--is-hidden">
         <p class="mb-10 form-prompt">Looks like you cracked the Top 10 high scores. Give me your initials, and we'll
           immortalize your performance.
         </p>
@@ -84,7 +82,8 @@ bit of overflow (the size of a the width of a scrollbar). So we hide the x overf
           <button class="px-3 py-2 btn-primary rounded text-white" id="user-initials-submit"
             type="submit">Immortalize</button>
         </form>
-        <p class="mb-10 user-initials-success hidden">Cool. We'll record this score for future games!</p>
+        <p class="mb-10 user-initials-success hidden" aria-live="polite">Cool. We'll record this score for future games!
+        </p>
       </div>
       <h2 class="text-xl md:text-2xl text-center mb-8 font-accent">Do you want to play again?</h2>
       <div class="flex justify-center mb-10">
@@ -157,28 +156,12 @@ bit of overflow (the size of a the width of a scrollbar). So we hide the x overf
               <td class="text-center high-scores__name-entry"></td>
               <td class="text-center high-scores__score-entry"></td>
             </tr>
-            <!-- <tr class="high-scores__row">
-              <td class=" text-center high-scores__rank-entry">
-                <span class="table-row-border table-row-border-top"></span>
-                <span class="table-row-border table-row-border-bottom"></span>
-                <span class="table-row-border table-row-border-left"></span>
-                11th</td>
-              <td class="text-center high-scores__name-entry">
-                <span class="table-row-border table-row-border-top"></span>
-                <span class="table-row-border table-row-border-bottom"></span>
-                faux</td>
-              <td class="text-center high-scores__score-entry hover-row">
-                <span class="table-row-border table-row-border-top"></span>
-                <span class="table-row-border table-row-border-right"></span>
-                <span class="table-row-border table-row-border-bottom"></span>
-                man</td>
-            </tr> -->
           </tbody>
         </table>
       </section>
     </div>
   </main>
-  <footer class="mt-8 p-4 text-center">
+  <footer class="footer-small-print mt-16 p-4 text-center">
     <p class="text-xs mb-3">Seinfeld is currently available to watch via Hulu and is syndicated on cable somewhere in
       the
       vicinity of

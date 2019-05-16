@@ -192,7 +192,7 @@ high-scores__row:hover .span4 {
 .question {
   position: relative;
   // one quote, in particular, is very long; so to prevent overflow, min-height is implemented
-  min-height: 130px;
+  min-height: 145px;
   z-index: 1;
   border-radius: 1em;
   color: white;
@@ -288,22 +288,24 @@ high-scores__row:hover .span4 {
 
   // only apply hover styling when not in --is-correct state
   &:not(.btn-special--is-correct):hover {
-    background-image: none;
-    background-color: #ffb31a;
-    color: black;
+    // only apply on larger screens to avoid issues (style not resetting between questions) with touch screens
+    @include screen('md') {
+      background-image: none;
+      background-color: #ffb31a;
+      color: black;
 
-    &:before {
-      border-right-color: #ffb31a;
-    }
+      &:before {
+        border-right-color: #ffb31a;
+      }
 
-    &:after {
-      border-left-color: #ffb31a;
-    }
-    .btn-special__letter {
-      color: white;
+      &:after {
+        border-left-color: #ffb31a;
+      }
+      .btn-special__letter {
+        color: white;
+      }
     }
   }
-
   &--is-selected {
     background-image: none;
     background-color: #ffb31a;
@@ -357,6 +359,14 @@ high-scores__row:hover .span4 {
     }
   }
 }
+
+// .footer {
+//   // position: absolute;
+//   // bottom: 0;
+//   // margin-top: 6em;
+// }
+
+
 
 @tailwind utilities;
 .bg-seinfeld {
