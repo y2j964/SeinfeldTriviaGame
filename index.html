@@ -18,32 +18,35 @@
 bit of overflow (the size of a the width of a scrollbar). So we hide the x overflow. -->
 
 <body class="overflow-x-hidden">
-  <header class="text-center px-10 py-8">
+  <header class="text-center px-10 py-8 md:py-12">
     <h1 class="text-3xl md:text-4xl m-0 font-accent">Seinfeld Quote Game</h1>
   </header>
-  <main class="container mx-auto px-5">
-    <div class="intro-stage intro-stage--is-hidden">
-      <p class="text-lg md:text-xl mb-2 ">You think you know Seinfeld? Well, we shall see who the true Wiz is. The rules
-        are
-        simple:
-        You will be given a quote, and you must identify which of the four major characters said it.</p>
-      <div class="ratio-16-9">
-        <img src="src/assets/images/seinfeld.jpg" alt="Jerry, George, Elaine, and Kramer">
+  <main class="container max-width-lg mx-auto px-5">
+    <div class="intro-stage ">
+      <p class="text-lg md:text-xl lg:text-2xl mb-2 ">You think you know Seinfeld? Well, we shall see who the true Wiz
+        is. The rules are simple: You will be given a quote, and you must identify which of the four major characters
+        said it.</p>
+      <div class="">
+        <div class="ratio-16-9">
+          <img src="src/assets/images/seinfeld.jpg" alt="Jerry, George, Elaine, and Kramer">
+        </div>
       </div>
       <div class="my-3 text-center">
-        <p class="text-lg md:text-xl mb-4">Are you ready to play?</p>
+        <p class="text-lg md:text-xl lg:text-2xl mb-4">Are you ready to play?</p>
         <button class="btn-primary ml-auto px-8 py-4 mb-2 b-2 border-yellow rounded-lg text-white" id="startGame">It's
-          Go
-          Time!</button>
+          Go Time!</button>
       </div>
     </div>
     <div class="main-stage main-stage--is-hidden">
+      <span class="sr-only" id="sr-correct-announcement" aria-live="polite"></span>
       <p class="text-center font-bold text-lg md:text-xl mb-3" aria-live="polite" aria-atomic="true">Score: <span
-          id="score-total">1</span></p>
-      <div class="question flex justify-center items-center px-6 py-4 mb-8">
+          id="score-total">0</span></p>
+      <div class="question flex justify-center items-center px-6 py-4 mb-8" aria-live="polite" aria-atomic="true">
+        <h2 class="sr-only question__heading" tabindex="-1">Question</h2>
         <p class="question__text text-center text-sm md:text-base"></p>
       </div>
       <div class="answers flex flex-col">
+        <h2 class="sr-only">Answer Options</h2>
         <div class="answers__group w-100 flex flex-col justify-center items-center md:flex-row md:mb-3">
           <hr class="full-width-link hidden md:block">
           <button class="btn-special" id="jerry">
@@ -65,11 +68,14 @@ bit of overflow (the size of a the width of a scrollbar). So we hide the x overf
             </span>
             Kramer</button>
         </div>
+        <div class="mt-8 flex justify-center">
+          <button class="px-8 py-4 btn-lifeline" aria-label="Eliminate 50% of wrong answers">50:50</button>
+        </div>
       </div>
     </div>
-    <div class="end-stage ">
-      <p class="text-xl md:text-2xl text-center mb-8">Aw, no more points for you. Your final score was <span
-          class="block text-3xl font-bold mt-8" id="end-score"></span>
+    <div class="end-stage end-stage--is-hidden ">
+      <p class="text-xl md:text-2xl text-center mb-10">Aw, no more points for you. Your final score was <span
+          class="block text-3xl font-bold mt-10" id="end-score"></span>
       </p>
       <div class="score-check score-check--is-hidden">
         <p class="mb-10 form-prompt">Looks like you cracked the Top 10 high scores. Give me your initials, and we'll
@@ -85,7 +91,7 @@ bit of overflow (the size of a the width of a scrollbar). So we hide the x overf
         <p class="mb-10 user-initials-success hidden" aria-live="polite">Cool. We'll record this score for future games!
         </p>
       </div>
-      <h2 class="text-xl md:text-2xl text-center mb-8 font-accent">Do you want to play again?</h2>
+      <h2 class="text-xl md:text-2xl text-center mb-10 font-accent">Do you want to play again?</h2>
       <div class="flex justify-center mb-10">
         <button class="btn-primary px-6 py-4 rounded-lg text-white" id="play-again">Yes</button>
         <!-- <button class="btn-primary px-6 py-4 mb-2 mr-8 b-2 border-yel-low rounded-lg text-white">No</button> -->

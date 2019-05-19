@@ -1,40 +1,35 @@
-const isPlaying = false;
-const startBtn = document.getElementById('startGame');
-const introStage = document.querySelector('.intro-stage');
-const questionText = document.querySelector('.question__text');
-// const [btnA, btnB, btnC, btnD] = document.querySelectorAll('.btn-special');
-const mainStage = document.querySelector('.main-stage');
-const endStage = document.querySelector('.end-stage');
+// needs module
 const formPrompt = document.querySelector('.form-prompt');
-const scoreCheckEl = document.querySelector('.score-check');
-const highScoresTable = document.querySelector('.high-scores');
 const highScoresHeading = document.querySelector('.high-scores-heading');
-const nameEntry = Array.from(document.querySelectorAll('.high-scores__name-entry'));
-const highScoreEntry = Array.from(document.querySelectorAll('.high-scores__score-entry'));
-const score = document.getElementById('score-total');
-let userInitials = document.getElementById('user-initials');
+
+// eventListeners
 const userInitialsForm = document.querySelector('.user-initials-form');
-const userInitialsSuccess = document.querySelector('.user-initials-success');
-const endScore = document.getElementById('end-score');
 const playAgainBtn = document.getElementById('play-again');
-const footerSmallPrint = document.querySelector('.footer-small-print');
 
-let borderTransitionPieces;
-let quotes;
-let correctAnswer;
-let selectedBtn;
-let correctBtn;
-let flashCount = 0;
-
-let scoreCount;
+// too exposed
+const userInitialsSuccess = document.querySelector('.user-initials-success');
+let quotesFixed;
+let quotesMutable;
+const btnLifeline = document.querySelector('.btn-lifeline');
 let highScoresArray;
+
+const highScoresTable = document.querySelector('.high-scores');
+const startBtn = document.getElementById('startGame');
+const mainStage = document.querySelector('.main-stage');
+const score = document.getElementById('score-total');
+let scoreCount;
+
 let newEntry;
 let newEntryElementRank;
 let newEntryElementName;
 let newEntryElementScore;
 
 const highScores = (function highScoresScope() {
-  function getHighScoresFromStorage() {
+  let userInitials;
+  const nameEntry = Array.from(document.querySelectorAll('.high-scores__name-entry'));
+  const highScoreEntry = Array.from(document.querySelectorAll('.high-scores__score-entry'));
+
+  const getHighScoresFromStorage = () => {
     if (localStorage.getItem('highScoresArray') === null) {
       highScoresArray = [
         { name: 'EB', score: 20 },
@@ -54,8 +49,8 @@ const highScores = (function highScoresScope() {
     } else {
       highScoresArray = JSON.parse(localStorage.getItem('highScoresArray'));
     }
-  }
-  function loadHighScores() {
+  };
+  const loadHighScores = () => {
     for (let i = 0; i < highScoresArray.length; i += 1) {
       // only log the top 10 highest scores
       if (i >= 10) {
@@ -65,9 +60,9 @@ const highScores = (function highScoresScope() {
       nameEntry[i].textContent = highScoresArray[i].name;
       highScoreEntry[i].textContent = highScoresArray[i].score;
     }
-  }
-  function updateHighScores() {
-    userInitials = userInitials.value;
+  };
+  const updateHighScores = () => {
+    userInitials = document.getElementById('user-initials').value;
     // store in object to be consistent with default storage objects
     newEntry = { name: userInitials, score: scoreCount };
     highScoresArray.push(newEntry);
@@ -76,7 +71,8 @@ const highScores = (function highScoresScope() {
     // remove lowest oldEntry from highScore table
     highScoresArray.pop();
     localStorage.setItem('highScoresArray', JSON.stringify(highScoresArray));
-  }
+    userInitialsForm.reset();
+  };
   return {
     getFromStorage: getHighScoresFromStorage,
     load: loadHighScores,
@@ -84,7 +80,6 @@ const highScores = (function highScoresScope() {
   };
 }());
 
-// highScores.getFromStorage();
 const createTdSpansForAnimation = function createTdSpansForAnimation() {
   // find index of newEntry so that we can highlight user's score
   const newEntryIndex = highScoresArray.findIndex(
@@ -140,12 +135,12 @@ const addTdSpansToDOM = function addTdSpansToDOM(tdRankSpans, tdNameSpans, tdSco
   newEntryElementScore.appendChild(scoreFragment);
 };
 
-const tableRowAnimation = function tableRowAnimationScope() {
-  // this function specifically is set up with outer scope so that we only grab the outer variables once
+const animateActiveTableRow = function animateActiveTableRowScope() {
+  // set up with outer scope so that we only grab the outer variables once
   // it also allows us to init the piece counter
+  // eslint-disable-next-line no-unused-vars
   return new Promise((resolve, reject) => {
     setTimeout(() => {
-      console.log('scope');
       // grab all spans in the order in which we want to draw border animation
       // we want to draw the border from the top left to top right, top right to bottom right,
       // bottom right to bottom left, and bottom left to top right
@@ -156,7 +151,7 @@ const tableRowAnimation = function tableRowAnimationScope() {
       );
       const tableRowBorderLeft = document.querySelector('.table-row-border-left');
 
-      borderTransitionPieces = [
+      const borderTransitionPieces = [
         ...tableRowBorderTop,
         tableRowBorderRight,
         ...tableRowBorderBottom.reverse(),
@@ -182,18 +177,20 @@ const tableRowAnimation = function tableRowAnimationScope() {
           borderTransitionPieces[piece].classList.add('table-row-border-left--is-drawing');
         }
         piece += 1;
-        // delay time needs to be identical to the transition-duration time for table-row-border-top,
-        // table-row-border-right, table-row-border-bottom, and table-row-border-left
+        // delay time needs to be identical to the transition-duration time for
+        // table-row-border-top, table-row-border-right, table-row-border-bottom,
+        // and table-row-border-left
         setTimeout(drawBorder, 350);
       }
       resolve();
-      // call drawBorder on execution on tableRowAnimation
+      // call drawBorder on execution on animateActiveTableRow
       drawBorder();
     }, 800);
   });
 };
 
 const scrollToHighScoresTable = function scrollToHighScoresTable() {
+  // eslint-disable-next-line no-unused-vars
   return new Promise((resolve, reject) => {
     setTimeout(() => {
       highScoresHeading.focus();
@@ -204,9 +201,10 @@ const scrollToHighScoresTable = function scrollToHighScoresTable() {
 };
 
 // remove elements and reveal success message
-const userInitialSubmissionSuccess = function userInitialSubmissionSuccess() {
-  // this and the previous 2 functions return Promises to keep them decoupled: they can be chained together if desired,
-  // or they can just be used by themselves
+const displayUserInitialSubmissionSuccessMessage = function displayUserInitialSubmissionSuccessMessage() {
+  // this and the previous 2 functions return Promises to keep them decoupled:
+  // they can be chained together if desired, or they can just be used by themselves
+  // eslint-disable-next-line no-unused-vars
   return new Promise((resolve, reject) => {
     setTimeout(() => {
       userInitialsForm.classList.add('user-initials-form--is-hidden');
@@ -235,99 +233,223 @@ const submitInitials = function submitInitials(e) {
   // collapse form upon valid submission
   userInitialsForm.classList.add('user-initials-form--is-collapsing');
   // after collapse transition is over . . .
-  userInitialSubmissionSuccess()
+  displayUserInitialSubmissionSuccessMessage()
     .then(() => scrollToHighScoresTable())
-    .then(() => tableRowAnimation());
+    .then(() => animateActiveTableRow());
 };
 
-const resetGame = function resetGame() {
-  // reset score
-  scoreCount = 0;
-  // remove all trSpan children of respective elements
-  if (newEntryElementName) {
-    while (newEntryElementRank.firstElementChild) {
-      newEntryElementRank.removeChild(newEntryElementRank.firstElementChild);
-    }
-    while (newEntryElementName.firstElementChild) {
-      newEntryElementName.removeChild(newEntryElementName.firstElementChild);
-    }
-    while (newEntryElementScore.firstElementChild) {
-      newEntryElementScore.removeChild(newEntryElementScore.firstElementChild);
-    }
-    // go parent node (the row) and . . .
-    newEntryElementScore.parentNode.removeAttribute('aria-label');
-  }
-  userInitialsSuccess.classList.add('hidden');
-  endStage.classList.add('end-stage--is-hidden');
-  footerSmallPrint.classList.add('hidden');
-  runGame();
+const randomNum = function randomNum(max) {
+  return Math.floor(Math.random() * Math.floor(max));
 };
-playAgainBtn.addEventListener('click', resetGame);
+
+const srCorrectAnnouncement = document.getElementById('sr-correct-announcement');
+
+const card = (function cardScope() {
+  const questionText = document.querySelector('.question__text');
+  const questionHeading = document.querySelector('.question__heading');
+  const answerButtons = Array.from(document.querySelectorAll('.btn-special'));
+  let correctAnswer;
+  let selectedBtn;
+  let correctBtn;
+  let flashCount = 0;
+
+  const loadCard = () => {
+    // mainStage.classList.remove('main-stage--is-fading');
+    const randomIndex = randomNum(quotesMutable.length);
+    const quoteObj = quotesMutable[randomIndex];
+    const { quote } = quoteObj;
+    correctAnswer = quoteObj.author;
+    console.log(`init correct: ${correctAnswer}`);
+    // btns have an id of their textContent, so you can find corresponding btn like so
+    correctBtn = mainStage.querySelector(`#${correctAnswer.toLowerCase()}`);
+    // update random quote to html
+    questionText.textContent = `"${quote}"`;
+    // focus for screen reader
+    questionHeading.focus();
+    // remove random quote from quotesMutable array
+    quotesMutable.splice(randomIndex, 1);
+  };
+
+  const resetCard = () => {
+    correctBtn.classList.remove('btn-special--is-correct');
+    selectedBtn.classList.remove('btn-special--is-selected');
+    answerButtons.forEach((answerBtn) => {
+      answerBtn.classList.remove('btn-special--is-disabled');
+      answerBtn.removeAttribute('disabled');
+      answerBtn.removeAttribute('aria-disabled', 'true');
+    });
+    srCorrectAnnouncement.textContent = '';
+    loadCard();
+  };
+  const checkCorrectAnswer = () => {
+    if (selectedBtn === correctBtn) {
+      srCorrectAnnouncement.textContent = 'Correct!';
+      scoreCount += 1;
+      score.textContent = scoreCount;
+      setTimeout(card.reset, 2000);
+    }
+    if (selectedBtn !== correctBtn) {
+      setTimeout(() => {
+        card.reset();
+        game.end();
+      }, 2000);
+    }
+  };
+
+  const toggleCorrectBtn = (e) => {
+    // check if this is first run by checking if their is an associated event
+    if (e) {
+      flashCount = 0;
+      selectedBtn = e.target;
+      selectedBtn.classList.add('btn-special--is-selected');
+    }
+    flashCount += 1;
+    if (flashCount < 6) {
+      correctBtn.classList.toggle('btn-special--is-correct');
+      // flash the --is-correct styles
+      setTimeout(toggleCorrectBtn, 200);
+    }
+    if (flashCount === 6) {
+      checkCorrectAnswer();
+    }
+  };
+
+  const processAnswerClick = (e) => {
+    if (!e.target.classList.contains('btn-special')) {
+      return;
+    }
+    toggleCorrectBtn(e);
+  };
+
+  const removeTwoFalseAnswers = (e) => {
+    if (!e.target.classList.contains('btn-lifeline')) {
+      return;
+    }
+    const correctBtnIndex = answerButtons.indexOf(correctBtn);
+    answerButtons.splice(correctBtnIndex, 1);
+    shuffle(answerButtons);
+    // we removed 1 potential answer (the correct one) from this array
+    // so we'll add 1 to the length to get a true 50:50 value;
+    for (let i = 0; i < (answerButtons.length + 1) / 2; i += 1) {
+      answerButtons[i].classList.add('btn-special--is-disabled');
+      answerButtons[i].setAttribute('disabled', 'true');
+      answerButtons[i].setAttribute('aria-disabled', 'true');
+    }
+    btnLifeline.classList.add('btn-lifeline--is-disabled');
+    btnLifeline.setAttribute('disabled', 'true');
+    btnLifeline.setAttribute('aria-disabled', 'true');
+    // const falseAnswers = answerBtns - correctAnswer
+  };
+
+  return {
+    load: loadCard,
+    reset: resetCard,
+    processAnswerClick,
+    toggleCorrectBtn,
+    checkCorrectAnswer,
+    removeTwoFalseAnswers,
+  };
+}());
+
+// Randomly shuffle an array
+// https://stackoverflow.com/a/2450976/1293256
+// @param  {Array} array The array to shuffle
+// @return {String}      The first item in the shuffled array
+const shuffle = function shuffle(array) {
+  let currentIndex = array.length;
+  let temporaryValue;
+  let randomIndex;
+
+  // While there remain elements to shuffle...
+  while (currentIndex !== 0) {
+    // Pick a remaining element...
+    randomIndex = Math.floor(Math.random() * currentIndex);
+    currentIndex -= 1;
+
+    // And swap it with the current element.
+    temporaryValue = array[currentIndex];
+    array[currentIndex] = array[randomIndex];
+    array[randomIndex] = temporaryValue;
+  }
+
+  return array;
+};
+
+const game = (function gameScope() {
+  const introStage = document.querySelector('.intro-stage');
+  const endStage = document.querySelector('.end-stage');
+  const footerSmallPrint = document.querySelector('.footer-small-print');
+  const endScore = document.getElementById('end-score');
+  const scoreCheckEl = document.querySelector('.score-check');
+
+  const runGame = () => {
+    introStage.classList.add('intro-stage--is-hidden');
+    // isPlaying = true;
+    scoreCount = 0;
+    // quotesMutable represents a copy of the original that we can remove quotes from as we
+    // progress in the game. Quotes fixed should not )be altered
+    quotesMutable = [...quotesFixed];
+    mainStage.classList.remove('main-stage--is-hidden');
+    footerSmallPrint.classList.remove('hidden');
+    score.textContent = scoreCount;
+    card.load();
+  };
+
+  const resetGame = () => {
+    // reset score
+    scoreCount = 0;
+    // remove all trSpan children of respective elements
+    if (newEntryElementName) {
+      while (newEntryElementRank.firstElementChild) {
+        newEntryElementRank.removeChild(newEntryElementRank.firstElementChild);
+      }
+      while (newEntryElementName.firstElementChild) {
+        newEntryElementName.removeChild(newEntryElementName.firstElementChild);
+      }
+      while (newEntryElementScore.firstElementChild) {
+        newEntryElementScore.removeChild(newEntryElementScore.firstElementChild);
+      }
+      // go parent node (the row) and . . .
+      newEntryElementScore.parentNode.removeAttribute('aria-label');
+    }
+    btnLifeline.classList.remove('btn-lifeline--is-disabled');
+    btnLifeline.removeAttribute('disabled');
+    btnLifeline.removeAttribute('aria-disabled');
+    userInitialsSuccess.classList.add('hidden');
+    endStage.classList.add('end-stage--is-hidden');
+    footerSmallPrint.classList.add('hidden');
+    runGame();
+  };
+
+  const endGame = () => {
+    highScores.getFromStorage();
+    highScores.load();
+    mainStage.classList.add('main-stage--is-hidden');
+    endStage.classList.remove('end-stage--is-hidden');
+    endScore.textContent = scoreCount;
+    // just compare score count to lowest high score
+    highScores.getFromStorage();
+
+    if (scoreCount < highScoresArray[highScoresArray.length - 1].score) {
+      return;
+    }
+    scoreCheckEl.classList.remove('score-check--is-hidden');
+    userInitialsForm.classList.remove('user-initials-form--is-hidden');
+    highScores.load();
+  };
+
+  return {
+    run: runGame,
+    reset: resetGame,
+    end: endGame,
+  };
+}());
+
+playAgainBtn.addEventListener('click', game.reset);
 
 userInitialsForm.addEventListener('submit', submitInitials);
 
-const endGame = function endGame() {
-  selectedBtn.classList.remove('btn-special--is-selected');
-  correctBtn.classList.remove('btn-special--is-correct');
-  mainStage.classList.add('main-stage--is-hidden');
-  endStage.classList.remove('end-stage--is-hidden');
-  endScore.textContent = scoreCount;
-  // just compare score count to lowest high score
-  highScores.getFromStorage();
-
-  if (scoreCount < highScoresArray[highScoresArray.length - 1].score) {
-    return;
-  }
-  scoreCheckEl.classList.remove('score-check--is-hidden');
-  highScores.load();
-};
-
-const toggleCorrectBtn = function toggleCorrectBtn(e) {
-  // check if this is first run by checking if their is an associated event
-  if (e) {
-    console.log(correctBtn);
-    flashCount = 0;
-    selectedBtn = e.target;
-    selectedBtn.classList.add('btn-special--is-selected');
-  }
-  flashCount += 1;
-  if (flashCount < 6) {
-    correctBtn.classList.toggle('btn-special--is-correct');
-    // flash the --is-correct styles
-    setTimeout(toggleCorrectBtn, 200);
-  }
-  if (flashCount === 6 && selectedBtn === correctBtn) {
-    console.log('correct');
-    scoreCount += 1;
-    score.textContent = scoreCount;
-    setTimeout(transitionCard, 2000);
-  }
-  if (flashCount === 6 && selectedBtn !== correctBtn) {
-    setTimeout(endGame, 2000);
-  }
-};
-
-const checkAnswerValidity = function checkAnswerValidity(e) {
-  if (!e.target.classList.contains('btn-special')) {
-    return;
-  }
-  correctBtn = mainStage.querySelector(`#${correctAnswer.toLowerCase()}`);
-  toggleCorrectBtn(e);
-};
-
-const transitionCard = function transitionCard() {
-  mainStage.classList.add('main-stage--is-fading');
-  console.log('transition');
-  correctBtn.classList.remove('btn-special--is-correct');
-  selectedBtn.classList.remove('btn-special--is-selected');
-  loadCard();
-};
-
-function randomNum(max) {
-  return Math.floor(Math.random() * Math.floor(max));
-}
-
-const fetchQuotes = function fetchQuotes(url) {
+const getQuotesFromServer = function getQuotesFromServer(url) {
   return new Promise((resolve, reject) => {
     const xhr = new XMLHttpRequest();
     xhr.open('GET', url, true);
@@ -337,42 +459,20 @@ const fetchQuotes = function fetchQuotes(url) {
   });
 };
 
-const loadCard = function loadCard() {
-  // mainStage.classList.remove('main-stage--is-fading');
-  const randomIndex = randomNum(quotes.length);
-  const quoteObj = quotes[randomIndex];
-  const { quote } = quoteObj;
-  correctAnswer = quoteObj.author;
-  console.log(`init correct: ${correctAnswer}`);
-  // update random quote to html
-  questionText.textContent = `"${quote}"`;
-  // remove random quote from quotes array
-  quotes.splice(randomIndex, 1);
-};
+// run immediately so we have the quotes array to work with
+getQuotesFromServer('https://seinfeld-quotes.herokuapp.com/quotes').then((data) => {
+  // there are a few quotes in this array that aren't said by Jerry, George, Elaine, or Kramer;
+  // We're not interested in those quotes, so we'll filter them out
+  // we'll also filter out uber-long quotes so that it doesn't resize
+  // our questions container in an extreme way
+  quotesFixed = data.quotes.filter(
+    quote => (quote.author === 'Jerry' && quote.quote.length < 300)
+      || (quote.author === 'George' && quote.quote.length < 300)
+      || (quote.author === 'Elaine' && quote.quote.length < 300)
+      || (quote.author === 'Kramer' && quote.quote.length < 300),
+  );
+});
 
-mainStage.addEventListener('click', checkAnswerValidity);
-
-const runGame = function runGame() {
-  introStage.classList.add('intro-stage--is-hidden');
-  // isPlaying = true;
-  fetchQuotes('https://seinfeld-quotes.herokuapp.com/quotes').then((data) => {
-    // there are a few quotes in this array that aren't said by Jerry, George, Elaine, or Kramer;
-    // We're not interested in those quotes, so we'll filter them out
-    quotes = data.quotes.filter(
-      quote => (quote.author === 'Jerry' && quote.quote.length < 300)
-        || (quote.author === 'George' && quote.quote.length < 300)
-        || (quote.author === 'Elaine' && quote.quote.length < 300)
-        || (quote.author === 'Kramer' && quote.quote.length < 300),
-    );
-    scoreCount = 0;
-    mainStage.classList.remove('main-stage--is-hidden');
-    footerSmallPrint.classList.remove('hidden');
-    score.textContent = scoreCount;
-    loadCard(quotes);
-  });
-};
-
-// runGame();
-// if answer is right, increment score and cue up next question
-
-startBtn.addEventListener('click', runGame);
+startBtn.addEventListener('click', game.run);
+mainStage.addEventListener('click', card.processAnswerClick);
+mainStage.addEventListener('click', card.removeTwoFalseAnswers);
