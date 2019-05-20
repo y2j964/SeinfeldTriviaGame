@@ -1,3 +1,44 @@
+@keyframes collapse {
+  0% {
+    transform: scale(1, 1);
+  }
+  99% {
+    transform: scale(0, 1);
+  }
+  100% {
+    transform: scale(0, 0);
+  }
+}
+
+.horizontal-line-full {
+  display: block;
+  height: 2px;
+  background-color: #000;
+  width: 100vw;
+  z-index: -1;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  right: 50%;
+  margin-left: -50vw;
+  margin-right: -50vw;
+  // visually it looks better if it is moved up a notch
+  margin-top: -1px;
+}
+
+// class nicked from Bootstrap
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap; /* added line */
+  border: 0;
+}
+
 // made into a pseudo element b/c of counter content
 .number-overlay:before {
   transition: all 0.5s ease-in-out;
@@ -110,19 +151,6 @@
   color: #ff66d9;
 }
 
-// class nicked from Bootstrap
-.sr-only {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  padding: 0;
-  margin: -1px;
-  overflow: hidden;
-  clip: rect(0, 0, 0, 0);
-  white-space: nowrap; /* added line */
-  border: 0;
-}
-
 .pointer {
   pointer-events: auto !important;
 }
@@ -154,12 +182,6 @@
 
 .shadow {
   box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.1);
-}
-
-.vertical-bar {
-  width: 1px;
-  height: 25px;
-  background-color: $light-grey;
 }
 
 .horizontal-bar {

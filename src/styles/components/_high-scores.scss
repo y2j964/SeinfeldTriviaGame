@@ -7,6 +7,12 @@
   //   #4d79ff 43%,
   //   #00134d 88%
   // );
+  &-heading {
+    text-shadow: 0 0 3px #ffb31a;
+    &:focus {
+      outline-width: 0px;
+    }
+  }
 
   tbody {
     border: 2px dashed #4dd2ff;
@@ -17,11 +23,15 @@
     border: 2px solid #4dd2ff;
   }
   &__column-headers {
+    @apply w-1/3 text-center py-5 px-3;
     color: white;
     background-color: #4dd2ff;
     font-family: 'Press Start 2P', cursive;
     font-size: 14px;
-    // border: 2px solid #00e64d;
+
+    @include screen('md') {
+      @apply px-4;
+    }
   }
   &__row {
     position: relative;

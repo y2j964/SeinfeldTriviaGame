@@ -1,0 +1,31 @@
+.lifeline {
+  position: relative;
+  border-radius: 50%;
+  background-color: #1f3c95;
+  color: white;
+  font-family: Helvetica, Arial;
+  font-size: 1rem;
+
+  &--is-disabled {
+    &:before,
+    &:after {
+      position: absolute;
+      display: block;
+      content: '';
+      background-color: red;
+      top: 0;
+      left: 50%;
+      height: 100%;
+      width: 2px;
+      // offset width;
+      margin-left: -2px;
+      transform: translateX(-50%);
+    }
+    &:before {
+      transform: rotate(45deg);
+    }
+    &:after {
+      transform: rotate(-45deg);
+    }
+  }
+}

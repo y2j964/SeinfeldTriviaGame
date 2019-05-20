@@ -10,7 +10,7 @@ const playAgainBtn = document.getElementById('play-again');
 const userInitialsSuccess = document.querySelector('.user-initials-success');
 let quotesFixed;
 let quotesMutable;
-const btnLifeline = document.querySelector('.btn-lifeline');
+const btnLifeline = document.querySelector('.lifeline');
 let highScoresArray;
 
 const highScoresTable = document.querySelector('.high-scores');
@@ -62,7 +62,7 @@ const highScores = (function highScoresScope() {
     }
   };
   const updateHighScores = () => {
-    userInitials = document.getElementById('user-initials').value;
+    userInitials = document.getElementById('user-initials-form__input').value;
     // store in object to be consistent with default storage objects
     newEntry = { name: userInitials, score: scoreCount };
     highScoresArray.push(newEntry);
@@ -247,14 +247,14 @@ const srCorrectAnnouncement = document.getElementById('sr-correct-announcement')
 const card = (function cardScope() {
   const questionText = document.querySelector('.question__text');
   const questionHeading = document.querySelector('.question__heading');
-  const answerButtons = Array.from(document.querySelectorAll('.btn-special'));
+  const answerButtons = Array.from(document.querySelectorAll('.btn-pointed'));
   let correctAnswer;
   let selectedBtn;
   let correctBtn;
   let flashCount = 0;
 
   const loadCard = () => {
-    // mainStage.classList.remove('main-stage--is-fading');
+    // mainStage.classList.remove('fading');
     const randomIndex = randomNum(quotesMutable.length);
     const quoteObj = quotesMutable[randomIndex];
     const { quote } = quoteObj;
@@ -271,10 +271,10 @@ const card = (function cardScope() {
   };
 
   const resetCard = () => {
-    correctBtn.classList.remove('btn-special--is-correct');
-    selectedBtn.classList.remove('btn-special--is-selected');
+    correctBtn.classList.remove('btn-pointed--is-correct');
+    selectedBtn.classList.remove('btn-pointed--is-selected');
     answerButtons.forEach((answerBtn) => {
-      answerBtn.classList.remove('btn-special--is-disabled');
+      answerBtn.classList.remove('btn-pointed--is-disabled');
       answerBtn.removeAttribute('disabled');
       answerBtn.removeAttribute('aria-disabled', 'true');
     });
@@ -301,11 +301,11 @@ const card = (function cardScope() {
     if (e) {
       flashCount = 0;
       selectedBtn = e.target;
-      selectedBtn.classList.add('btn-special--is-selected');
+      selectedBtn.classList.add('btn-pointed--is-selected');
     }
     flashCount += 1;
     if (flashCount < 6) {
-      correctBtn.classList.toggle('btn-special--is-correct');
+      correctBtn.classList.toggle('btn-pointed--is-correct');
       // flash the --is-correct styles
       setTimeout(toggleCorrectBtn, 200);
     }
@@ -315,14 +315,14 @@ const card = (function cardScope() {
   };
 
   const processAnswerClick = (e) => {
-    if (!e.target.classList.contains('btn-special')) {
+    if (!e.target.classList.contains('btn-pointed')) {
       return;
     }
     toggleCorrectBtn(e);
   };
 
   const removeTwoFalseAnswers = (e) => {
-    if (!e.target.classList.contains('btn-lifeline')) {
+    if (!e.target.classList.contains('lifeline')) {
       return;
     }
     const correctBtnIndex = answerButtons.indexOf(correctBtn);
@@ -331,11 +331,11 @@ const card = (function cardScope() {
     // we removed 1 potential answer (the correct one) from this array
     // so we'll add 1 to the length to get a true 50:50 value;
     for (let i = 0; i < (answerButtons.length + 1) / 2; i += 1) {
-      answerButtons[i].classList.add('btn-special--is-disabled');
+      answerButtons[i].classList.add('btn-pointed--is-disabled');
       answerButtons[i].setAttribute('disabled', 'true');
       answerButtons[i].setAttribute('aria-disabled', 'true');
     }
-    btnLifeline.classList.add('btn-lifeline--is-disabled');
+    btnLifeline.classList.add('lifeline--is-disabled');
     btnLifeline.setAttribute('disabled', 'true');
     btnLifeline.setAttribute('aria-disabled', 'true');
     // const falseAnswers = answerBtns - correctAnswer
@@ -383,13 +383,13 @@ const game = (function gameScope() {
   const scoreCheckEl = document.querySelector('.score-check');
 
   const runGame = () => {
-    introStage.classList.add('intro-stage--is-hidden');
+    introStage.classList.add('hidden');
     // isPlaying = true;
     scoreCount = 0;
     // quotesMutable represents a copy of the original that we can remove quotes from as we
     // progress in the game. Quotes fixed should not )be altered
     quotesMutable = [...quotesFixed];
-    mainStage.classList.remove('main-stage--is-hidden');
+    mainStage.classList.remove('hidden');
     footerSmallPrint.classList.remove('hidden');
     score.textContent = scoreCount;
     card.load();
@@ -412,11 +412,11 @@ const game = (function gameScope() {
       // go parent node (the row) and . . .
       newEntryElementScore.parentNode.removeAttribute('aria-label');
     }
-    btnLifeline.classList.remove('btn-lifeline--is-disabled');
+    btnLifeline.classList.remove('lifeline--is-disabled');
     btnLifeline.removeAttribute('disabled');
     btnLifeline.removeAttribute('aria-disabled');
     userInitialsSuccess.classList.add('hidden');
-    endStage.classList.add('end-stage--is-hidden');
+    endStage.classList.add('hidden');
     footerSmallPrint.classList.add('hidden');
     runGame();
   };
@@ -424,8 +424,8 @@ const game = (function gameScope() {
   const endGame = () => {
     highScores.getFromStorage();
     highScores.load();
-    mainStage.classList.add('main-stage--is-hidden');
-    endStage.classList.remove('end-stage--is-hidden');
+    mainStage.classList.add('hidden');
+    endStage.classList.remove('hidden');
     endScore.textContent = scoreCount;
     // just compare score count to lowest high score
     highScores.getFromStorage();
@@ -433,7 +433,7 @@ const game = (function gameScope() {
     if (scoreCount < highScoresArray[highScoresArray.length - 1].score) {
       return;
     }
-    scoreCheckEl.classList.remove('score-check--is-hidden');
+    scoreCheckEl.classList.remove('hidden');
     userInitialsForm.classList.remove('user-initials-form--is-hidden');
     highScores.load();
   };

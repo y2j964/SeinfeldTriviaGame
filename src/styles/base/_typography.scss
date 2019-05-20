@@ -14,6 +14,10 @@
   font-family: $font-accent;
 }
 
+.font-retro {
+  font-family: 'Press Start 2P', cursive;
+}
+
 .font-xs {
   font-size: $font-xs;
 }
@@ -42,43 +46,27 @@
   color: black;
 }
 
-.text-grey {
-  color: $grey;
-}
-
-.text-grey-darker {
-  color: $grey-darker;
-}
-
-.text-light-grey {
-  color: $light-grey;
-}
-
 .capitalize {
   text-transform: capitalize;
 }
 
-.text-underline-none {
-  color: $grey;
-  &:hover {
-    text-decoration: none;
-    color: darken($grey, 10%);
-  }
-}
+// .text-underline-none {
+//   color: $grey;
+//   &:hover {
+//     text-decoration: none;
+//     color: darken($grey, 10%);
+//   }
+// }
 
-.hover-underline:hover {
-  text-decoration: underline;
-}
+// .hover-underline:hover {
+//   text-decoration: underline;
+// }
 
-.anchor-primary {
-  color: $magenta;
-  font-family: Verdana, Geneva, sans-serif;
+// .anchor-primary {
+//   color: $magenta;
+//   font-family: Verdana, Geneva, sans-serif;
 
-  &:hover {
-    color: darken($magenta, 10%);
-  }
-}
-
-.anchor-default {
-  color: $blue-link;
-}
+//   &:hover {
+//     color: darken($magenta, 10%);
+//   }
+// }

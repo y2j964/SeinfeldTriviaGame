@@ -1,0 +1,53 @@
+.table-row-border {
+  display: block;
+  position: absolute;
+  background-color: #ffb31a;
+
+  &-top {
+    left: 0px;
+    top: -2px;
+    width: 0;
+    // height/width needs to match transparent border of relative el
+    height: 2px;
+    transition: width 350ms linear;
+
+    &--is-drawing {
+      width: 100%;
+    }
+  }
+
+  &-right {
+    right: -2px;
+    top: -2px;
+    width: 2px;
+    height: 0;
+    transition: height 350ms linear;
+
+    &--is-drawing {
+      height: calc(100% + 4px);
+    }
+  }
+  &-bottom {
+    right: 0px;
+    bottom: -2px;
+    width: 0;
+    height: 2px;
+    // transition delays need to be proportional; for four corners, it is 0s, 1s, 350ms, 3s.
+    transition: width 350ms linear;
+
+    &--is-drawing {
+      width: 100%;
+    }
+  }
+  &-left {
+    left: -2px;
+    bottom: -2px;
+    width: 2px;
+    height: 0;
+    transition: height 350ms linear;
+
+    &--is-drawing {
+      height: calc(100% + 4px);
+    }
+  }
+}

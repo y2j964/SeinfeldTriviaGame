@@ -1,0 +1,22 @@
+.question {
+  @apply flex justify-center items-center px-6 py-4 mb-8;
+  position: relative;
+  // one quote, in particular, is very long; so to prevent overflow, min-height is implemented
+  min-height: 145px;
+  z-index: 1;
+  border-radius: 1em;
+  color: white;
+  background-image: linear-gradient(
+    to right,
+    #00134d 3%,
+    #4d79ff 43%,
+    #00134d 88%
+  );
+
+  &__text {
+    @apply text-center text-sm;
+    @include screen('md') {
+      @apply text-base;
+    }
+  }
+}

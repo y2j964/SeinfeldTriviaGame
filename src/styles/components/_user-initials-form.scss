@@ -1,0 +1,24 @@
+.user-initials-form {
+  @apply justify-center items-center mb-10;
+  display: flex;
+
+  &--is-collapsing {
+    animation: collapse 800ms forwards;
+  }
+
+  &--is-hidden {
+    display: none;
+  }
+
+  &__label {
+    @apply text-grey font-bold mr-2;
+  }
+
+  &__input {
+    @apply appearance-none border rounded py-2 px-3 mr-2 text-grey-darker leading-tight;
+    width: 135px;
+    &:focus {
+      border: 2px solid #1f3c95;
+    }
+  }
+}
