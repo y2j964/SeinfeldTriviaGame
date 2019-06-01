@@ -1,11 +1,12 @@
 .btn-pointed {
   @apply mb-1 text-sm flex-grow;
+
   position: relative;
   width: 70%;
   line-height: 50px;
   height: 50px;
   border-radius: 1.5em;
-  font-family: Helvetica, Arial;
+  font-family: Helvetica, Arial, sans-serif;
   color: white;
   background-image: linear-gradient(
     to right,
@@ -22,7 +23,7 @@
     }
   }
 
-  &:before {
+  &::before {
     display: block;
     content: '';
     position: absolute;
@@ -38,7 +39,7 @@
     border-right: 21px solid #00134d;
   }
 
-  &:after {
+  &::after {
     display: block;
     content: '';
     position: absolute;
@@ -78,30 +79,33 @@
       background-color: #ffb31a;
       color: black;
 
-      &:before {
+      &::before {
         border-right-color: #ffb31a;
       }
 
-      &:after {
+      &::after {
         border-left-color: #ffb31a;
       }
+
       .btn-pointed__letter {
         color: white;
       }
     }
   }
+
   &--is-selected {
     background-image: none;
     background-color: #ffb31a;
     color: black;
 
-    &:before {
+    &::before {
       border-right-color: #ffb31a;
     }
 
-    &:after {
+    &::after {
       border-left-color: #ffb31a;
     }
+
     .btn-pointed__letter {
       color: white;
     }
@@ -111,7 +115,7 @@
     background-image: none;
     background-color: #00e64d;
 
-    &:before {
+    &::before {
       display: block;
       content: '';
       position: absolute;
@@ -127,7 +131,7 @@
       border-right: 21px solid #00e64d;
     }
 
-    &:after {
+    &::after {
       display: block;
       content: '';
       position: absolute;

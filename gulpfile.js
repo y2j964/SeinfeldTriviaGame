@@ -19,6 +19,11 @@ const browserSync = require('browser-sync').create();
 sass.compiler = require('node-sass');
 // you can use plumber or you can just use, for example, sass's on error handling
 
+function handleError(error) {
+  console.log(error.toString());
+  this.emit('end');
+}
+
 // compress images
 gulp.task('imageMin', () => gulp
   .src('src/assets/images/*')
@@ -50,8 +55,10 @@ gulp.task('scripts', () => gulp
   .pipe(
     babel({
       presets: ['@babel/env'],
+      plugins: ['@babel/transform-runtime'],
     }),
   )
+  .on('error', handleError)
   .pipe(concat('main.js'))
   .pipe(terser())
   .pipe(lineEndings())

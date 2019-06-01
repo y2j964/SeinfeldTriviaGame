@@ -4,7 +4,7 @@
   background-color: #ffb31a;
 
   &-top {
-    left: 0px;
+    left: 0;
     top: -2px;
     width: 0;
     // height/width needs to match transparent border of relative el
@@ -27,8 +27,9 @@
       height: calc(100% + 4px);
     }
   }
+
   &-bottom {
-    right: 0px;
+    right: 0;
     bottom: -2px;
     width: 0;
     height: 2px;
@@ -39,6 +40,7 @@
       width: 100%;
     }
   }
+
   &-left {
     left: -2px;
     bottom: -2px;

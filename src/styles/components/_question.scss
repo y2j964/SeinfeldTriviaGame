@@ -1,5 +1,6 @@
 .question {
   @apply flex justify-center items-center px-6 py-4 mb-8;
+
   position: relative;
   // one quote, in particular, is very long; so to prevent overflow, min-height is implemented
   min-height: 145px;
@@ -15,6 +16,7 @@
 
   &__text {
     @apply text-center text-sm;
+
     @include screen('md') {
       @apply text-base;
     }

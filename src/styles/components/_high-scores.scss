@@ -9,8 +9,9 @@
   // );
   &-heading {
     text-shadow: 0 0 3px #ffb31a;
+
     &:focus {
-      outline-width: 0px;
+      outline-width: 0;
     }
   }
 
@@ -22,8 +23,10 @@
     // border needs to match thickness of tbody border
     border: 2px solid #4dd2ff;
   }
+
   &__column-headers {
     @apply w-1/3 text-center py-5 px-3;
+
     color: white;
     background-color: #4dd2ff;
     font-family: 'Press Start 2P', cursive;
@@ -33,13 +36,16 @@
       @apply px-4;
     }
   }
+
   &__row {
     position: relative;
+
     &--is-active {
       border: 2px solid #ffb31a;
       // color: white;
     }
   }
+
   &__rank-entry,
   &__name-entry,
   &__score-entry {

@@ -1,96 +1,54 @@
-// needs module
-const formPrompt = document.querySelector('.form-prompt');
-const highScoresHeading = document.querySelector('.high-scores-heading');
-
 // eventListeners
 const userInitialsForm = document.querySelector('.user-initials-form');
 const playAgainBtn = document.getElementById('play-again');
-
-// too exposed
-const userInitialsSuccess = document.querySelector('.user-initials-success');
-let quotesFixed;
-let quotesMutable;
-const btnLifeline = document.querySelector('.lifeline');
-let highScoresArray;
-
-const highScoresTable = document.querySelector('.high-scores');
 const startBtn = document.getElementById('startGame');
 const mainStage = document.querySelector('.main-stage');
+
+// globals
+let quotesFixed;
+let quotesMutable;
+let highScoresRecords;
 const score = document.getElementById('score-total');
 let scoreCount;
 
-let newEntry;
-let newEntryElementRank;
-let newEntryElementName;
-let newEntryElementScore;
+// pub sub
+const userInitialsSuccess = document.querySelector('.user-initials-success');
+const btnLifeline = document.querySelector('.lifeline');
 
-const highScores = (function highScoresScope() {
-  let userInitials;
-  const nameEntry = Array.from(document.querySelectorAll('.high-scores__name-entry'));
-  const highScoreEntry = Array.from(document.querySelectorAll('.high-scores__score-entry'));
+function sleep(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
 
-  const getHighScoresFromStorage = () => {
-    if (localStorage.getItem('highScoresArray') === null) {
-      highScoresArray = [
-        { name: 'EB', score: 20 },
-        { name: 'JCM', score: 25 },
-        { name: 'JS', score: 14 },
-        { name: 'GC', score: 17 },
-        { name: 'EB', score: 8 },
-        { name: 'LD', score: 10 },
-        { name: 'KC', score: 13 },
-        { name: 'GC', score: 6 },
-        { name: 'KC', score: 3 },
-        { name: 'JS', score: 4 },
-      ];
-      // ensure list is sorted;
-      highScoresArray.sort((a, b) => b.score - a.score);
-      localStorage.setItem('highScoresArray', JSON.stringify(highScoresArray));
-    } else {
-      highScoresArray = JSON.parse(localStorage.getItem('highScoresArray'));
-    }
-  };
-  const loadHighScores = () => {
-    for (let i = 0; i < highScoresArray.length; i += 1) {
-      // only log the top 10 highest scores
-      if (i >= 10) {
-        break;
-      }
-      // const text = document.createTextNode(highScoresArray[i].name);
-      nameEntry[i].textContent = highScoresArray[i].name;
-      highScoreEntry[i].textContent = highScoresArray[i].score;
-    }
-  };
-  const updateHighScores = () => {
-    userInitials = document.getElementById('user-initials-form__input').value;
-    // store in object to be consistent with default storage objects
-    newEntry = { name: userInitials, score: scoreCount };
-    highScoresArray.push(newEntry);
-    // find correct placement of newEntry in highScore table
-    highScoresArray.sort((a, b) => b.score - a.score);
-    // remove lowest oldEntry from highScore table
-    highScoresArray.pop();
-    localStorage.setItem('highScoresArray', JSON.stringify(highScoresArray));
-    userInitialsForm.reset();
-  };
-  return {
-    getFromStorage: getHighScoresFromStorage,
-    load: loadHighScores,
-    update: updateHighScores,
-  };
-}());
+const randomNum = function randomNum(max) {
+  return Math.floor(Math.random() * Math.floor(max));
+};
+
+// Randomly shuffle an array
+// https://stackoverflow.com/a/2450976/1293256
+// @param  {Array} array The array to shuffle
+// @return {String}      The first item in the shuffled array
+const shuffle = function shuffle(array) {
+  let currentIndex = array.length;
+  let temporaryValue;
+  let randomIndex;
+
+  // While there remain elements to shuffle...
+  while (currentIndex !== 0) {
+    // Pick a remaining element...
+    randomIndex = Math.floor(Math.random() * currentIndex);
+    currentIndex -= 1;
+
+    // And swap it with the current element.
+    temporaryValue = array[currentIndex];
+    // eslint-disable-next-line no-param-reassign
+    array[currentIndex] = array[randomIndex];
+    // eslint-disable-next-line no-param-reassign
+    array[randomIndex] = temporaryValue;
+  }
+  return array;
+};
 
 const createTdSpansForAnimation = function createTdSpansForAnimation() {
-  // find index of newEntry so that we can highlight user's score
-  const newEntryIndex = highScoresArray.findIndex(
-    entry => entry.name === newEntry.name && entry.score === newEntry.score,
-  );
-  const newEntryElement = document.querySelector(`tbody tr:nth-of-type(${newEntryIndex + 1})`);
-  newEntryElement.setAttribute('aria-label', 'Your performance immortalized');
-  newEntryElementRank = newEntryElement.querySelector('.high-scores__rank-entry');
-  newEntryElementName = newEntryElement.querySelector('.high-scores__name-entry');
-  newEntryElementScore = newEntryElement.querySelector('.high-scores__score-entry');
-
   // animation is built out of spans, bc you can't set tr to position relative
   // you can however set td to relative
   const tdRankSpans = [];
@@ -120,131 +78,213 @@ const createTdSpansForAnimation = function createTdSpansForAnimation() {
   return [tdRankSpans, tdNameSpans, tdScoreSpans];
 };
 
-const addTdSpansToDOM = function addTdSpansToDOM(tdRankSpans, tdNameSpans, tdScoreSpans) {
-  // append spans in fragments to minimize repaints
-  const rankFragment = document.createDocumentFragment();
-  tdRankSpans.forEach(span => rankFragment.appendChild(span));
-  newEntryElementRank.appendChild(rankFragment);
-
-  const nameFragment = document.createDocumentFragment();
-  tdNameSpans.forEach(span => nameFragment.appendChild(span));
-  newEntryElementName.appendChild(nameFragment);
-
-  const scoreFragment = document.createDocumentFragment();
-  tdScoreSpans.forEach(span => scoreFragment.appendChild(span));
-  newEntryElementScore.appendChild(scoreFragment);
+const addFragmentsToDOM = function addFragmentsToDOM(fragmentParts, fragmentDestination) {
+  const fragment = document.createDocumentFragment();
+  fragmentParts.forEach(fragmentPart => fragment.appendChild(fragmentPart));
+  fragmentDestination.appendChild(fragment);
 };
 
-const animateActiveTableRow = function animateActiveTableRowScope() {
-  // set up with outer scope so that we only grab the outer variables once
-  // it also allows us to init the piece counter
-  // eslint-disable-next-line no-unused-vars
-  return new Promise((resolve, reject) => {
-    setTimeout(() => {
-      // grab all spans in the order in which we want to draw border animation
-      // we want to draw the border from the top left to top right, top right to bottom right,
-      // bottom right to bottom left, and bottom left to top right
-      const tableRowBorderTop = Array.from(document.querySelectorAll('.table-row-border-top'));
-      const tableRowBorderRight = document.querySelector('.table-row-border-right');
-      const tableRowBorderBottom = Array.from(
-        document.querySelectorAll('.table-row-border-bottom'),
-      );
-      const tableRowBorderLeft = document.querySelector('.table-row-border-left');
-
-      const borderTransitionPieces = [
-        ...tableRowBorderTop,
-        tableRowBorderRight,
-        ...tableRowBorderBottom.reverse(),
-        tableRowBorderLeft,
-      ];
-      // init counter;
-      let piece = 0;
-
-      function drawBorder() {
-        if (piece >= borderTransitionPieces.length) {
-          return;
-        }
-        if (borderTransitionPieces[piece].classList.contains('table-row-border-top')) {
-          borderTransitionPieces[piece].classList.add('table-row-border-top--is-drawing');
-        }
-        if (borderTransitionPieces[piece].classList.contains('table-row-border-right')) {
-          borderTransitionPieces[piece].classList.add('table-row-border-right--is-drawing');
-        }
-        if (borderTransitionPieces[piece].classList.contains('table-row-border-bottom')) {
-          borderTransitionPieces[piece].classList.add('table-row-border-bottom--is-drawing');
-        }
-        if (borderTransitionPieces[piece].classList.contains('table-row-border-left')) {
-          borderTransitionPieces[piece].classList.add('table-row-border-left--is-drawing');
-        }
-        piece += 1;
-        // delay time needs to be identical to the transition-duration time for
-        // table-row-border-top, table-row-border-right, table-row-border-bottom,
-        // and table-row-border-left
-        setTimeout(drawBorder, 350);
-      }
-      resolve();
-      // call drawBorder on execution on animateActiveTableRow
-      drawBorder();
-    }, 800);
-  });
+const removeAllChildEls = function removeAllChildEls(parentEl) {
+  while (parentEl.firstElementChild) {
+    parentEl.removeChild(parentEl.firstElementChild);
+  }
 };
 
-const scrollToHighScoresTable = function scrollToHighScoresTable() {
-  // eslint-disable-next-line no-unused-vars
-  return new Promise((resolve, reject) => {
-    setTimeout(() => {
-      highScoresHeading.focus();
-      highScoresTable.scrollIntoView({ behavior: 'smooth' });
-      resolve();
-    }, 2000);
-  });
-};
+const entrySubmissionSuccess = (function entrySubmissionSuccessScope() {
+  const formPrompt = document.querySelector('.form-prompt');
+  const highScoresHeading = document.querySelector('.high-scores-heading');
+  const highScoresTable = document.querySelector('.high-scores');
+  let borderTransitionPieces;
+  let piece = 0;
 
-// remove elements and reveal success message
-const displayUserInitialSubmissionSuccessMessage = function displayUserInitialSubmissionSuccessMessage() {
-  // this and the previous 2 functions return Promises to keep them decoupled:
-  // they can be chained together if desired, or they can just be used by themselves
-  // eslint-disable-next-line no-unused-vars
-  return new Promise((resolve, reject) => {
-    setTimeout(() => {
-      userInitialsForm.classList.add('user-initials-form--is-hidden');
-      // restore to non-collapsed default state
-      userInitialsForm.classList.remove('user-initials-form--is-collapsing');
-      // hidden form prompt text
-      formPrompt.classList.add('hidden');
-      // display successful submission text
-      userInitialsSuccess.classList.remove('hidden');
-      resolve();
-    }, 800);
-  });
-};
+  const displayMessage = () => {
+    userInitialsForm.classList.add('user-initials-form--is-hidden');
+    // restore to non-collapsed default state
+    userInitialsForm.classList.remove('user-initials-form--is-collapsing');
+    // hidden form prompt text
+    formPrompt.classList.add('hidden');
+    // display successful submission text
+    userInitialsSuccess.classList.remove('hidden');
+  };
+  const scrollToHighScoresTable = () => {
+    highScoresHeading.focus();
+    highScoresTable.scrollIntoView({ behavior: 'smooth' });
+  };
+  const getTrBorderPieces = () => {
+    // grab all spans in the order in which we want to draw border animation
+    // we want to draw the border from the top left to top right, top right to bottom right,
+    // bottom right to bottom left, and bottom left to top right
+    const tableRowBorderTop = Array.from(document.querySelectorAll('.table-row-border-top'));
+    const tableRowBorderRight = document.querySelector('.table-row-border-right');
+    const tableRowBorderBottom = Array.from(document.querySelectorAll('.table-row-border-bottom'));
+    const tableRowBorderLeft = document.querySelector('.table-row-border-left');
 
-// transition messages
+    borderTransitionPieces = [
+      ...tableRowBorderTop,
+      tableRowBorderRight,
+      ...tableRowBorderBottom.reverse(),
+      tableRowBorderLeft,
+    ];
+    // don't return borderTransitionPieces b/c drawBorder uses a recursive loop
+    // and the passed-in borderTransitionPieces will be lost after the first loop
+  };
+  const drawBorder = () => {
+    if (piece >= borderTransitionPieces.length) {
+      return;
+    }
+    if (borderTransitionPieces[piece].classList.contains('table-row-border-top')) {
+      borderTransitionPieces[piece].classList.add('table-row-border-top--is-drawing');
+    }
+    if (borderTransitionPieces[piece].classList.contains('table-row-border-right')) {
+      borderTransitionPieces[piece].classList.add('table-row-border-right--is-drawing');
+    }
+    if (borderTransitionPieces[piece].classList.contains('table-row-border-bottom')) {
+      borderTransitionPieces[piece].classList.add('table-row-border-bottom--is-drawing');
+    }
+    if (borderTransitionPieces[piece].classList.contains('table-row-border-left')) {
+      borderTransitionPieces[piece].classList.add('table-row-border-left--is-drawing');
+    }
+    piece += 1;
+    // delay time needs to be identical to the transition-duration time for
+    // table-row-border-top, table-row-border-right, table-row-border-bottom,
+    // and table-row-border-left
+    setTimeout(drawBorder, 350);
+  };
 
-const submitInitials = function submitInitials(e) {
-  e.preventDefault();
-  // update new entry into highScores array
-  highScores.update();
-  // load new entry into table
-  highScores.load();
-  // grab return arrays created by createTdSpansForAnimation
-  const [tdRankSpans, tdNameSpans, tdScoreSpans] = createTdSpansForAnimation();
-  addTdSpansToDOM(tdRankSpans, tdNameSpans, tdScoreSpans);
-  // collapse form upon valid submission
-  userInitialsForm.classList.add('user-initials-form--is-collapsing');
-  // after collapse transition is over . . .
-  displayUserInitialSubmissionSuccessMessage()
-    .then(() => scrollToHighScoresTable())
-    .then(() => animateActiveTableRow());
-};
+  return {
+    displayMessage,
+    scrollToHighScoresTable,
+    getTrBorderPieces,
+    drawBorder,
+  };
+}());
 
-const randomNum = function randomNum(max) {
-  return Math.floor(Math.random() * Math.floor(max));
-};
+const highScores = (function highScoresScope() {
+  let userInitials;
+  const nameEntry = Array.from(document.querySelectorAll('.high-scores__name-entry'));
+  const highScoreEntry = Array.from(document.querySelectorAll('.high-scores__score-entry'));
+  let newEntry;
+  let newEntryElement;
+  let newEntryElementRank;
+  let newEntryElementName;
+  let newEntryElementScore;
 
-const srCorrectAnnouncement = document.getElementById('sr-correct-announcement');
+  const recordsAreInStorage = () => {
+    if (localStorage.getItem('highScoresRecords') === null) {
+      return false;
+    }
+    return true;
+  };
+
+  const initHighScoresRecords = () => {
+    highScoresRecords = [
+      { name: 'EB', score: 20 },
+      { name: 'JCM', score: 25 },
+      { name: 'JS', score: 14 },
+      { name: 'GC', score: 17 },
+      { name: 'EB', score: 8 },
+      { name: 'LD', score: 10 },
+      { name: 'KC', score: 13 },
+      { name: 'GC', score: 6 },
+      { name: 'KC', score: 3 },
+      { name: 'JS', score: 4 },
+    ];
+    // ensure list is sorted in descending order;
+    highScoresRecords.sort((a, b) => b.score - a.score);
+  };
+  const setInStorage = () => {
+    localStorage.setItem('highScoresRecords', JSON.stringify(highScoresRecords));
+  };
+
+  const getFromStorage = () => {
+    highScoresRecords = JSON.parse(localStorage.getItem('highScoresRecords'));
+  };
+
+  const getRecords = () => {
+    if (!recordsAreInStorage()) {
+      initHighScoresRecords();
+      setInStorage();
+    } else {
+      getFromStorage();
+    }
+  };
+
+  const loadHighScoresToDOM = () => {
+    highScoresRecords.forEach((entry, index) => {
+      nameEntry[index].textContent = entry.name;
+      highScoreEntry[index].textContent = entry.score;
+    });
+  };
+
+  const updateHighScores = () => {
+    // store in object to be consistent with default storage objects
+    newEntry = { name: userInitials, score: scoreCount };
+    highScoresRecords.push(newEntry);
+    // find correct placement of newEntry in highScore table
+    highScoresRecords.sort((a, b) => b.score - a.score);
+    // remove lowest oldEntry from highScore table
+    highScoresRecords.pop();
+    localStorage.setItem('highScoresRecords', JSON.stringify(highScoresRecords));
+    userInitialsForm.reset();
+  };
+  const getNewEntryIndex = () => {
+    // find index of newEntry so that we can highlight user's score
+    const newEntryIndex = highScoresRecords.findIndex(
+      entry => entry.name === newEntry.name && entry.score === newEntry.score,
+    );
+    return newEntryIndex;
+  };
+  const getNewEntryCells = () => {
+    const newEntryIndex = getNewEntryIndex();
+    newEntryElement = document.querySelector(`tbody tr:nth-of-type(${newEntryIndex + 1})`);
+    newEntryElementRank = newEntryElement.querySelector('.high-scores__rank-entry');
+    newEntryElementName = newEntryElement.querySelector('.high-scores__name-entry');
+    newEntryElementScore = newEntryElement.querySelector('.high-scores__score-entry');
+    return [newEntryElementRank, newEntryElementName, newEntryElementScore];
+  };
+  const resetTdSpans = () => {
+    if (newEntryElementName) {
+      removeAllChildEls(newEntryElementRank);
+      removeAllChildEls(newEntryElementName);
+      removeAllChildEls(newEntryElementScore);
+      // go parent node (the row) and . . .
+      newEntryElementScore.parentNode.removeAttribute('aria-label');
+    }
+  };
+  const submitEntry = (e) => {
+    e.preventDefault();
+    userInitials = document.querySelector('.user-initials-form__input').value;
+    updateHighScores();
+    loadHighScoresToDOM();
+    getNewEntryCells();
+    newEntryElement.setAttribute('aria-label', 'Your performance immortalized');
+    // grab return arrays created by createTdSpansForAnimation
+    const [tdRankSpans, tdNameSpans, tdScoreSpans] = createTdSpansForAnimation();
+    addFragmentsToDOM(tdRankSpans, newEntryElementRank);
+    addFragmentsToDOM(tdNameSpans, newEntryElementName);
+    addFragmentsToDOM(tdScoreSpans, newEntryElementScore);
+    // collapse form upon valid submission
+    userInitialsForm.classList.add('user-initials-form--is-collapsing');
+    // perform series of animations with delays in between actions
+    // pub sub
+    sleep(800)
+      .then(() => entrySubmissionSuccess.displayMessage())
+      .then(() => sleep(2000))
+      .then(() => entrySubmissionSuccess.scrollToHighScoresTable())
+      .then(() => sleep(800))
+      .then(() => entrySubmissionSuccess.getTrBorderPieces())
+      .then(() => entrySubmissionSuccess.drawBorder());
+  };
+  return {
+    getRecords,
+    loadToDOM: loadHighScoresToDOM,
+    submitEntry,
+    resetTdSpans,
+  };
+}());
 
 const card = (function cardScope() {
+  const srCorrectAnnouncement = document.getElementById('sr-correct-announcement');
   const questionText = document.querySelector('.question__text');
   const questionHeading = document.querySelector('.question__heading');
   const answerButtons = Array.from(document.querySelectorAll('.btn-pointed'));
@@ -254,12 +294,11 @@ const card = (function cardScope() {
   let flashCount = 0;
 
   const loadCard = () => {
-    // mainStage.classList.remove('fading');
     const randomIndex = randomNum(quotesMutable.length);
     const quoteObj = quotesMutable[randomIndex];
     const { quote } = quoteObj;
     correctAnswer = quoteObj.author;
-    console.log(`init correct: ${correctAnswer}`);
+    console.log(`correct: ${correctAnswer}`);
     // btns have an id of their textContent, so you can find corresponding btn like so
     correctBtn = mainStage.querySelector(`#${correctAnswer.toLowerCase()}`);
     // update random quote to html
@@ -273,63 +312,58 @@ const card = (function cardScope() {
   const resetCard = () => {
     correctBtn.classList.remove('btn-pointed--is-correct');
     selectedBtn.classList.remove('btn-pointed--is-selected');
+    // pubsub
     answerButtons.forEach((answerBtn) => {
       answerBtn.classList.remove('btn-pointed--is-disabled');
       answerBtn.removeAttribute('disabled');
       answerBtn.removeAttribute('aria-disabled', 'true');
     });
+    flashCount = 0;
     srCorrectAnnouncement.textContent = '';
-    loadCard();
-  };
-  const checkCorrectAnswer = () => {
-    if (selectedBtn === correctBtn) {
-      srCorrectAnnouncement.textContent = 'Correct!';
-      scoreCount += 1;
-      score.textContent = scoreCount;
-      setTimeout(card.reset, 2000);
-    }
-    if (selectedBtn !== correctBtn) {
-      setTimeout(() => {
-        card.reset();
-        game.end();
-      }, 2000);
-    }
   };
 
-  const toggleCorrectBtn = (e) => {
-    // check if this is first run by checking if their is an associated event
-    if (e) {
-      flashCount = 0;
-      selectedBtn = e.target;
-      selectedBtn.classList.add('btn-pointed--is-selected');
+  const incrementScore = () => {
+    scoreCount += 1;
+    score.textContent = scoreCount;
+  };
+
+  const userGuessedRight = () => {
+    if (selectedBtn === correctBtn) {
+      return true;
     }
+    return false;
+  };
+
+  const selectUserGuess = (e) => {
+    selectedBtn = e.target;
+    selectedBtn.classList.add('btn-pointed--is-selected');
+  };
+
+  const toggleCorrectBtn = () => new Promise((resolve) => {
     flashCount += 1;
     if (flashCount < 6) {
       correctBtn.classList.toggle('btn-pointed--is-correct');
-      // flash the --is-correct styles
-      setTimeout(toggleCorrectBtn, 200);
+        // flash the --is-correct styles
+      setTimeout(() => {
+        toggleCorrectBtn();
+        resolve();
+      }, 200);
     }
     if (flashCount === 6) {
-      checkCorrectAnswer();
+      resolve();
     }
-  };
-
-  const processAnswerClick = (e) => {
-    if (!e.target.classList.contains('btn-pointed')) {
-      return;
-    }
-    toggleCorrectBtn(e);
-  };
+  });
 
   const removeTwoFalseAnswers = (e) => {
     if (!e.target.classList.contains('lifeline')) {
       return;
     }
     const correctBtnIndex = answerButtons.indexOf(correctBtn);
+    // remove the correct answer from this array
     answerButtons.splice(correctBtnIndex, 1);
     shuffle(answerButtons);
-    // we removed 1 potential answer (the correct one) from this array
-    // so we'll add 1 to the length to get a true 50:50 value;
+    // add 1 to answerButtons.length to get a true 50:50 value
+    // this accounts for the right answer being removed;
     for (let i = 0; i < (answerButtons.length + 1) / 2; i += 1) {
       answerButtons[i].classList.add('btn-pointed--is-disabled');
       answerButtons[i].setAttribute('disabled', 'true');
@@ -341,39 +375,35 @@ const card = (function cardScope() {
     // const falseAnswers = answerBtns - correctAnswer
   };
 
+  const checkAnswer = (e) => {
+    if (!e.target.classList.contains('btn-pointed')) {
+      return;
+    }
+    selectUserGuess(e);
+    toggleCorrectBtn().then(() => {
+      if (userGuessedRight()) {
+        incrementScore();
+        srCorrectAnnouncement.textContent = 'Correct!';
+        sleep(2000).then(() => {
+          resetCard();
+          loadCard();
+        });
+      } else {
+        sleep(2000).then(() => {
+          resetCard();
+          // pubsub
+          game.end();
+        });
+      }
+    });
+  };
+
   return {
     load: loadCard,
-    reset: resetCard,
-    processAnswerClick,
-    toggleCorrectBtn,
-    checkCorrectAnswer,
+    checkAnswer,
     removeTwoFalseAnswers,
   };
 }());
-
-// Randomly shuffle an array
-// https://stackoverflow.com/a/2450976/1293256
-// @param  {Array} array The array to shuffle
-// @return {String}      The first item in the shuffled array
-const shuffle = function shuffle(array) {
-  let currentIndex = array.length;
-  let temporaryValue;
-  let randomIndex;
-
-  // While there remain elements to shuffle...
-  while (currentIndex !== 0) {
-    // Pick a remaining element...
-    randomIndex = Math.floor(Math.random() * currentIndex);
-    currentIndex -= 1;
-
-    // And swap it with the current element.
-    temporaryValue = array[currentIndex];
-    array[currentIndex] = array[randomIndex];
-    array[randomIndex] = temporaryValue;
-  }
-
-  return array;
-};
 
 const game = (function gameScope() {
   const introStage = document.querySelector('.intro-stage');
@@ -381,61 +411,48 @@ const game = (function gameScope() {
   const footerSmallPrint = document.querySelector('.footer-small-print');
   const endScore = document.getElementById('end-score');
   const scoreCheckEl = document.querySelector('.score-check');
+  const gameOverText = document.querySelector('.game-over-text');
 
   const runGame = () => {
-    introStage.classList.add('hidden');
-    // isPlaying = true;
-    scoreCount = 0;
     // quotesMutable represents a copy of the original that we can remove quotes from as we
     // progress in the game. Quotes fixed should not )be altered
     quotesMutable = [...quotesFixed];
+    introStage.classList.add('hidden');
     mainStage.classList.remove('hidden');
     footerSmallPrint.classList.remove('hidden');
+    scoreCount = 0;
     score.textContent = scoreCount;
     card.load();
   };
 
   const resetGame = () => {
-    // reset score
-    scoreCount = 0;
     // remove all trSpan children of respective elements
-    if (newEntryElementName) {
-      while (newEntryElementRank.firstElementChild) {
-        newEntryElementRank.removeChild(newEntryElementRank.firstElementChild);
-      }
-      while (newEntryElementName.firstElementChild) {
-        newEntryElementName.removeChild(newEntryElementName.firstElementChild);
-      }
-      while (newEntryElementScore.firstElementChild) {
-        newEntryElementScore.removeChild(newEntryElementScore.firstElementChild);
-      }
-      // go parent node (the row) and . . .
-      newEntryElementScore.parentNode.removeAttribute('aria-label');
-    }
+    highScores.resetTdSpans();
     btnLifeline.classList.remove('lifeline--is-disabled');
     btnLifeline.removeAttribute('disabled');
     btnLifeline.removeAttribute('aria-disabled');
     userInitialsSuccess.classList.add('hidden');
     endStage.classList.add('hidden');
     footerSmallPrint.classList.add('hidden');
+    // reset score
+    scoreCount = 0;
     runGame();
   };
 
   const endGame = () => {
-    highScores.getFromStorage();
-    highScores.load();
     mainStage.classList.add('hidden');
     endStage.classList.remove('hidden');
+    gameOverText.focus();
     endScore.textContent = scoreCount;
     // just compare score count to lowest high score
-    highScores.getFromStorage();
+    highScores.getRecords();
+    highScores.loadToDOM();
 
-    if (scoreCount < highScoresArray[highScoresArray.length - 1].score) {
+    if (scoreCount <= highScoresRecords[highScoresRecords.length - 1].score) {
       return;
     }
     scoreCheckEl.classList.remove('hidden');
     userInitialsForm.classList.remove('user-initials-form--is-hidden');
-    highScores.load();
   };
 
   return {
@@ -445,34 +462,36 @@ const game = (function gameScope() {
   };
 }());
 
-playAgainBtn.addEventListener('click', game.reset);
+// eslint-disable-next-line func-names
+(function () {
+  const getQuotesFromServer = function getQuotesFromServer(url) {
+    return new Promise((resolve, reject) => {
+      const xhr = new XMLHttpRequest();
+      xhr.open('GET', url, true);
+      xhr.onload = () => resolve(JSON.parse(xhr.responseText));
+      xhr.onerror = () => reject(xhr.statusText);
+      xhr.send();
+    });
+  };
 
-userInitialsForm.addEventListener('submit', submitInitials);
+  const filterQuotes = (data) => {
+    // there are a few quotes in this array that aren't said by Jerry, George, Elaine, or Kramer;
+    // We're not interested in those quotes, so we'll filter them out
+    const relevantCharacters = ['Jerry', 'George', 'Elaine', 'Kramer'];
+    // we'll also filter out uber-long quotes so that it doesn't resize
+    // our questions container in an extreme way
+    const maxQuoteLength = 300;
+    quotesFixed = data.quotes.filter(
+      quote => relevantCharacters.includes(quote.author) && quote.quote.length < maxQuoteLength,
+    );
+  };
 
-const getQuotesFromServer = function getQuotesFromServer(url) {
-  return new Promise((resolve, reject) => {
-    const xhr = new XMLHttpRequest();
-    xhr.open('GET', url, true);
-    xhr.onload = () => resolve(JSON.parse(xhr.responseText));
-    xhr.onerror = () => reject(xhr.statusText);
-    xhr.send();
-  });
-};
-
-// run immediately so we have the quotes array to work with
-getQuotesFromServer('https://seinfeld-quotes.herokuapp.com/quotes').then((data) => {
-  // there are a few quotes in this array that aren't said by Jerry, George, Elaine, or Kramer;
-  // We're not interested in those quotes, so we'll filter them out
-  // we'll also filter out uber-long quotes so that it doesn't resize
-  // our questions container in an extreme way
-  quotesFixed = data.quotes.filter(
-    quote => (quote.author === 'Jerry' && quote.quote.length < 300)
-      || (quote.author === 'George' && quote.quote.length < 300)
-      || (quote.author === 'Elaine' && quote.quote.length < 300)
-      || (quote.author === 'Kramer' && quote.quote.length < 300),
-  );
-});
+  // run immediately so we have the quotes array to work with
+  getQuotesFromServer('https://seinfeld-quotes.herokuapp.com/quotes').then(filterQuotes);
+}());
 
 startBtn.addEventListener('click', game.run);
-mainStage.addEventListener('click', card.processAnswerClick);
+mainStage.addEventListener('click', card.checkAnswer);
 mainStage.addEventListener('click', card.removeTwoFalseAnswers);
+playAgainBtn.addEventListener('click', game.reset);
+userInitialsForm.addEventListener('submit', highScores.submitEntry);

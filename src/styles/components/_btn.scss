@@ -1,7 +1,7 @@
 .btn {
   background-color: #1f3c95;
   color: white;
-  font-family: Helvetica, Arial;
+  font-family: Helvetica, Arial, sans-serif;
   font-size: 0.875rem;
 
   @include screen('md') {

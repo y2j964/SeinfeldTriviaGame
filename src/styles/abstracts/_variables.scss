@@ -78,15 +78,21 @@ $line-height-md: 1.5;
     @media only screen and #{$xl} {
       @content;
     }
-  } @else if $size==lg {
+  }
+
+  @else if $size==lg {
     @media only screen and #{$lg} {
       @content;
     }
-  } @else if $size==md {
+  }
+
+  @else if $size==md {
     @media only screen and #{$md} {
       @content;
     }
-  } @else if $size==sm {
+  }
+
+  @else if $size==sm {
     @media only screen and #{$sm} {
       @content;
     }
@@ -119,7 +125,9 @@ $line-height-md: 1.5;
 @function set-test-color($bg-color) {
   @if (lightness($bg-color)) >50 {
     @return #000;
-  } @else {
+  }
+
+  @else {
     @return #fff;
   }
 }

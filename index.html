@@ -26,10 +26,8 @@ bit of overflow (the size of a the width of a scrollbar). So we hide the x overf
       <p class="text-lg md:text-xl lg:text-2xl mb-2 ">You think you know Seinfeld? Well, we shall see who the true Wiz
         is. The rules are simple: You will be given a quote, and you must identify which of the four major characters
         said it.</p>
-      <div class="">
-        <div class="ratio-16-9">
-          <img src="src/assets/images/seinfeld.jpg" alt="Jerry, George, Elaine, and Kramer">
-        </div>
+      <div class="ratio-16-9">
+        <img src="src/assets/images/seinfeld.jpg" alt="Jerry, George, Elaine, and Kramer">
       </div>
       <div class="my-3 text-center">
         <p class="text-lg md:text-xl lg:text-2xl mb-4">Are you ready to play?</p>
@@ -76,21 +74,24 @@ bit of overflow (the size of a the width of a scrollbar). So we hide the x overf
         </div>
       </div>
     </div>
-    <div class="end-stage hidden ">
-      <p class="text-xl md:text-2xl text-center mb-10">Aw, no more points for you. Your final score was <span
-          class="block text-3xl font-bold mt-10" id="end-score"></span>
+    <div class="end-stage hidden">
+      <p class="game-over-text outline-none text-xl md:text-2xl text-center mb-10" tabindex="-1">Aw, no more points for
+        you. Your
+        final score was
+        <span class="block text-3xl font-bold mt-10" id="end-score"></span>
       </p>
       <div class="score-check hidden">
-        <p class="mb-10 form-prompt">Looks like you cracked the Top 10 high scores. Give me your initials, and we'll
-          immortalize your performance.
+        <p class="mb-10 form-prompt text-center">Looks like you cracked the Top 10 high scores. Give me
+          your initials, and we'll immortalize your performance.
         </p>
         <form class="user-initials-form" action="">
           <label class="user-initials-form__label" for="userInitialsFormInput">Initials:</label>
           <input class="user-initials-form__input" id="userInitialsFormInput" type="text" maxlength="3"
-            placeholder="e.g. JM or JCM">
+            placeholder="e.g. JM or JCM" required>
           <button class="btn px-3 py-2 rounded" id="user-initials-submit" type="submit">Immortalize</button>
         </form>
-        <p class="mb-10 user-initials-success hidden" aria-live="polite">Cool. We'll record this score for future games!
+        <p class=" user-initials-success hidden mb-10 text-center" aria-live="polite">Cool. We'll record this score for
+          future games!
         </p>
       </div>
       <h2 class="text-xl md:text-2xl text-center mb-10 font-accent">Do you want to play again?</h2>
@@ -175,7 +176,7 @@ bit of overflow (the size of a the width of a scrollbar). So we hide the x overf
       33 times a day. Go watch it.</p>
     <p class="text-xs">All Seinfeld quotes here are pulled from https://seinfeld-quotes.herokuapp.com/</p>
   </footer>
-  <script src="src/js/main.js"></script>
+  <script src="dist/main.js"></script>
 </body>
 
 </html>

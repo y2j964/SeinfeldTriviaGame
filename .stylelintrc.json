@@ -1,0 +1,23 @@
+{
+    "ignoreFiles": [
+        "**/*.js"
+    ],
+    "plugins": [
+        "stylelint-prettier"
+    ],
+    "extends": "stylelint-config-standard",
+    "rules": {
+        "indentation": 2,
+        "string-quotes": "single",
+        "no-duplicate-selectors": true,
+        "selector-no-qualifying-type": true,
+        "selector-attribute-quotes": "always",
+        "declaration-block-trailing-semicolon": "always",
+        "declaration-no-important": true,
+        "declaration-colon-space-after": "always",
+        "function-url-quotes": "always",
+        "font-weight-notation": "numeric",
+        "font-family-name-quotes": "always-where-recommended",
+        "at-rule-no-unknown": null
+    }
+}
