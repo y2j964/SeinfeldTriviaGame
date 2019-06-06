@@ -29,7 +29,7 @@
 
     color: white;
     background-color: #4dd2ff;
-    font-family: 'Press Start 2P', cursive;
+    font-family: $font-primary;
     font-size: 14px;
 
     @include screen('md') {
@@ -51,8 +51,8 @@
   &__score-entry {
     position: relative;
     padding: 0.75rem 0.75rem;
-    font-family: 'Press Start 2P', cursive;
-    font-size: 12px;
+    font-family: $font-primary;
+    font-size: 14px;
 
     @include screen('md') {
       padding: 0.75rem 1rem;

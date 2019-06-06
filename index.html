@@ -9,19 +9,14 @@
   <meta name="description" content="" />
   <meta name="keywords" content="" />
   <meta name="robots" content="index,follow" />
-  <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
-  <link href="https://fonts.googleapis.com/css?family=Press+Start+2P" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
-  <link rel="stylesheet" type="text/css" href="dist/styles.css" />
+  <link rel="icon" type="image/png" sizes="16x16" href="favicon.png">
 </head>
-<!-- we're using a full width class for the hr elements. VW units are offset based, so there will be a tiny
-bit of overflow (the size of a the width of a scrollbar). So we hide the x overflow. -->
 
 <body class="overflow-x-hidden">
   <header class="text-center px-10 py-8 md:py-12">
-    <h1 class="text-3xl md:text-4xl m-0 font-accent">Seinfeld Quote Game</h1>
+    <h1 class="text-3xl md:text-4xl m-0 font-accent font-bold">Seinfeld Quote Game</h1>
   </header>
-  <main class="container max-w-2xl mx-auto px-5">
+  <main class="container max-w-6xl mx-auto px-5">
     <div class="intro-stage">
       <p class="text-lg md:text-xl lg:text-2xl mb-2 ">You think you know Seinfeld? Well, we shall see who the true Wiz
         is. The rules are simple: You will be given a quote, and you must identify which of the four major characters
@@ -94,9 +89,9 @@ bit of overflow (the size of a the width of a scrollbar). So we hide the x overf
           future games!
         </p>
       </div>
-      <h2 class="text-xl md:text-2xl text-center mb-10 font-accent">Do you want to play again?</h2>
+      <p class="text-xl md:text-2xl text-center mb-10">Do you want to play again?</p>
       <div class="flex justify-center mb-10">
-        <button class="btn px-6 py-4 rounded-lg" id="play-again">Yes</button>
+        <button class="btn px-8 py-3 rounded-lg" id="play-again">Yes</button>
       </div>
       <section class="mb-4">
         <h2 class="high-scores-heading text-center text-xl md:text-2xl mb-2 font-retro" tabindex="-1">High Scores</h2>
@@ -176,7 +171,7 @@ bit of overflow (the size of a the width of a scrollbar). So we hide the x overf
       33 times a day. Go watch it.</p>
     <p class="text-xs">All Seinfeld quotes here are pulled from https://seinfeld-quotes.herokuapp.com/</p>
   </footer>
-  <script src="dist/main.js"></script>
+  <!-- <script src="src/js/main.js"></script> -->
 </body>
 
 </html>

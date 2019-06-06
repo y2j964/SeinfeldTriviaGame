@@ -420,7 +420,7 @@ const game = (function gameScope() {
     introStage.classList.add('hidden');
     mainStage.classList.remove('hidden');
     footerSmallPrint.classList.remove('hidden');
-    scoreCount = 0;
+    scoreCount = 8;
     score.textContent = scoreCount;
     card.load();
   };

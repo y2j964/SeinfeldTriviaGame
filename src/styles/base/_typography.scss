@@ -1,45 +1,30 @@
 @font-face {
-  font-family: latoregular;
-  src: url('../src/assets/fonts/lato-regular-webfont.woff2') format('woff2'),
-    url('../src/assets/fonts/lato-regular-webfont.woff') format('woff');
-  font-weight: 400;
+  font-family: 'open_sansregular';
+  src: url('../assets/fonts/opensans-regular-webfont.woff2') format('woff2'),
+    url('../assets/fonts/opensans-regular-webfont.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'press_start_2pregular';
+  src: url('../assets/fonts/pressstart2p-regular-webfont.woff2')
+    format('woff2'),
+    url('../assets/fonts/pressstart2p-regular-webfont.woff') format('woff');
+  font-weight: normal;
   font-style: normal;
 }
 
 .font-primary {
-  font-family: $font-primary;
+  font-family: 'open_sansregular', sans-serif;
 }
 
 .font-accent {
-  font-family: $font-accent;
+  font-family: Helvetica, Arial;
 }
 
 .font-retro {
-  font-family: 'Press Start 2P', cursive;
-}
-
-.font-xs {
-  font-size: $font-xs;
-}
-
-.font-sm {
-  font-size: $font-sm;
-}
-
-.font-md {
-  font-size: $font-md;
-}
-
-.font-lg {
-  font-size: $font-lg;
-}
-
-.font-xl-1 {
-  font-size: $font-xl-1;
-}
-
-.font-xl-2 {
-  font-size: $font-xl-2;
+  font-family: 'press_start_2pregular';
 }
 
 .text-black {
