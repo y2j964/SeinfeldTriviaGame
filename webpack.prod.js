@@ -30,7 +30,7 @@ module.exports = merge(common, {
     rules: [
       {
         test: /\.html$/,
-        use: [{ loader: 'html-loader', options: { minimize: true } }],
+        use: [{ loader: 'html-srcsets-loader', options: { minimize: true } }],
       },
       {
         test: /\.scss$/,

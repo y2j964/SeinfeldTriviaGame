@@ -14,24 +14,23 @@
 
 <body class="overflow-x-hidden">
   <header class="text-center px-10 py-8 md:py-12">
-    <h1 class="text-3xl md:text-4xl m-0 font-accent font-bold">Seinfeld Quote Game</h1>
+    <h1 class="text-2xl sm:text-3xl md:text-4xl m-0 font-accent font-bold">Seinfeld Quote Game</h1>
   </header>
   <main class="container max-w-6xl mx-auto px-5">
     <div class="intro-stage">
-      <p class="text-lg md:text-xl lg:text-2xl mb-2 ">You think you know Seinfeld? Well, we shall see who the true Wiz
-        is. The rules are simple: You will be given a quote, and you must identify which of the four major characters
-        said it.</p>
-      <div class="ratio-16-9">
-        <!-- <img srcset="src/assets/images/seinfeldSm.jpg 320w,
-                    src/assets/images/seinfeldMd.jpg 640w,
+      <p class="text-sm sm:text-lg md:text-xl lg:text-2xl mb-8 md:mb-2 ">You think you know Seinfeld? Well, we shall see
+        who the true Wiz is. The rules are simple: You will be given a quote, and you must identify which of the four
+        major characters said it.</p>
+      <div class="-mx-5 md:mx-0 ratio-16-9">
+        <img srcset="src/assets/images/seinfeld-sm.jpg 320w,
+                    src/assets/images/seinfeld-md.jpg 640w,
                     src/assets/images/seinfeld.jpg 1100w" sizes="(max-width: 320px) 280px,
                     (max-width: 640px) 600px,
-                    1060px"  -->
-        <img src="src/assets/images/seinfeld.jpg" alt="Jerry, George, Elaine, and Kramer">
+                    1060px" src="src/assets/images/seinfeld.jpg" alt="Jerry, George, Elaine, and Kramer">
       </div>
-      <div class="my-3 text-center">
-        <p class="text-lg md:text-xl lg:text-2xl mb-4">Are you ready to play?</p>
-        <button class="btn px-8 py-4 mb-2 rounded-lg" id="startGame">It's
+      <div class="mt-6 text-center">
+        <p class="text-base sm:text-lg md:text-xl lg:text-2xl mb-6 sm:mb-4">Are you ready to play?</p>
+        <button class="btn px-8 py-4 sm:mb-4 rounded-lg" id="startGame">It's
           Go Time!</button>
       </div>
     </div>
@@ -75,16 +74,17 @@
       </div>
     </div>
     <div class="end-stage hidden">
-      <p class="game-over-text outline-none text-xl md:text-2xl text-center mb-10" tabindex="-1">Aw, no more points for
-        you. Your
-        final score was
-        <span class="block text-3xl font-bold mt-10" id="end-score"></span>
+      <p class="game-over-text outline-none text-lg sm:text-xl md:text-2xl text-center mb-8 sm:mb-10" tabindex="-1">Aw,
+        no more
+        points for
+        you. Your final score was
+        <span class="block text-3xl font-bold mt-8 sm:mt-10" id="end-score"></span>
       </p>
       <div class="score-check hidden">
         <p class="mb-10 form-prompt text-center">Looks like you cracked the Top 10 high scores. Give me
           your initials, and we'll immortalize your performance.
         </p>
-        <form class="user-initials-form" action="">
+        <form class="user-initials-form">
           <label class="user-initials-form__label" for="userInitialsFormInput">Initials:</label>
           <input class="user-initials-form__input" id="userInitialsFormInput" type="text" maxlength="3"
             placeholder="e.g. JM or JCM" required>
@@ -94,7 +94,7 @@
           future games!
         </p>
       </div>
-      <p class="text-xl md:text-2xl text-center mb-10">Do you want to play again?</p>
+      <p class="text-xl md:text-2xl text-center mb-12">Do you want to play again?</p>
       <div class="flex justify-center mb-10">
         <button class="btn px-8 py-3 rounded-lg" id="play-again">Yes</button>
       </div>

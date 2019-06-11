@@ -13,7 +13,7 @@ export const incrementScore = () => {
 };
 
 export const resetScore = () => {
-  scoreCount = 9;
+  scoreCount = 0;
   score.textContent = scoreCount;
 };
 
