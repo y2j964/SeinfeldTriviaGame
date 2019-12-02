@@ -89,6 +89,8 @@ const getTrBorderPieces = () => {
 };
 const drawBorder = () => {
   if (piece >= borderTransitionPieces.length) {
+    // reset piece so that it works on subsequent plays
+    piece = 0;
     return;
   }
   if (borderTransitionPieces[piece].classList.contains('table-row-border-top')) {
