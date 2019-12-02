@@ -1,7 +1,7 @@
 const purgecss = require('@fullhuman/postcss-purgecss')({
   content: ['index.html'],
-  // ignore any --is- modifier class
-  whitelistPatterns: [/\-\-is\-/],
+  // ignore any --is- modifier class and table-row-borders
+  whitelistPatterns: [/--is-/, /table-row-border.*/],
 
   defaultExtractor: content => content.match(/[A-Za-z0-9-_:/]+/g) || [],
 });
