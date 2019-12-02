@@ -1,7 +1,7 @@
 # SeinfeldQuizShow
-Seinfeld Quiz Show is a trivia game that tests your knowledge of Seinfeld quotes. If you can correctly identify the author of the quote, you are awarded a point and proceed to the next question. If you guess wrong, you are taken to high score screen where you can enter your initials.
+Seinfeld Quote Game is a trivia game that tests your knowledge of Seinfeld quotes. If you can correctly identify the author of the quote, you are awarded a point and proceed to the next question. If you guess wrong, you are taken to high score screen where you can enter your initials.
 
-![Seinfeld Quiz Show animated demo](demo/demo.gif)
+![Seinfeld Quote Game animated demo](demo/demo.gif)
 
 ## Table of contents
 * [Demo](#Demo)
