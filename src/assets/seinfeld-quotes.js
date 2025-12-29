@@ -1,4 +1,4 @@
-const seinfeldQuotes = [
+export default [
   // Jerry
   { author: "Jerry", quote: "He's nice; bit of a close talker." },
   { author: "Jerry", quote: "So let me get this straight. You find yourself in the kitchen. You see an éclair in the receptacle... and you think to yourself: 'What the hell, I'll just eat some trash.'" },
