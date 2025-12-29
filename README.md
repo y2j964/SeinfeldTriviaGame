@@ -36,7 +36,7 @@ This exercise was mostly an excuse to get some experience making AJAX calls to a
 * Aria-supported
 
 ## Setup
-This project uses Webpack for bundling and minification and uses TailwindCSS for a CSS framework. Sass is additionally used to build css components.
+This project uses Webpack for bundling and minification and uses TailwindCSS for a CSS framework. Sass is additionally used to build css components. Node version 13 should work.
 
 ### Dependencies
 To get started, clone this repo  and run `npm install`.

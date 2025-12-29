@@ -1,5 +1,5 @@
 import seinfeldQuotes from '../assets/seinfeld-quotes';
-import shuffle from 'shuffle';
+import shuffle from './shuffle';
 
 const getDataFromServer = function getDataFromServer(url) {
   return new Promise((resolve, reject) => {
