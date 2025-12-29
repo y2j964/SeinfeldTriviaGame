@@ -1,3 +1,6 @@
+import seinfeldQuotes from '../assets/seinfeld-quotes';
+import shuffle from 'shuffle';
+
 const getDataFromServer = function getDataFromServer(url) {
   return new Promise((resolve, reject) => {
     const xhr = new XMLHttpRequest();
@@ -22,4 +25,6 @@ const filterQuotes = (data) => {
 };
 
 // eslint-disable-next-line import/prefer-default-export
-export const getRelevantSeinfeldQuotes = () => getDataFromServer('https://seinfeld-quotes.herokuapp.com/quotes').then(filterQuotes);
+export const getRelevantSeinfeldQuotes = () => getDataFromServer('https://seinfeld-quotes.herokuapp.com/quotes')
+	.then(filterQuotes)
+	.catch(() => shuffle(seinfeldQuotes));
